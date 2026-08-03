@@ -19,8 +19,6 @@ This is a basic engine for getting a game up and running faster than starting fr
 You will likely need to read through and understand the systems in play in order to actually build anything from this, which is why I have included verbose comments around every corner to clue the reader into what is supposed to be happening at both a high level, and a low level. Comments such as:
 
 `````
-...
 inc hl      ; HL -> entity.state
-...
 `````
 are meant to be useful when debugging by allowing the programmer to see what value HL is supposed to be pointing at, while they can check in the debugger what value HL is actually pointing at. 
