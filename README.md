@@ -19,8 +19,22 @@ This is a basic engine for getting a game up and running faster than starting fr
 You will likely need to read through and understand the systems in play in order to actually build anything from this, which is why I have included verbose comments around every corner to clue the reader into what is supposed to be happening at both a high level, and a low level. Comments such as:
 
 `````
-ld hl, entity.0.updateEntityRoutinePointerHi    ; HL -> entity.0.updateEntityRoutinePointerHi
-inc hl                                          ; HL -> entity.0.state
+; ==============================================================
+;  Updates the TestRoomTonbow
+; ==============================================================
+; Parameters: HL = testRoomTonbow.state (Should be coming from EntityList@UpdateEntities)
+; Returns: None
+; Affects: A, BC, DE, HL
+	@Update:
+	; Choose what to do based off state
+		ld a, DEACTIVATE_ENTITY
+		cp (hl)
+		jr z, @Deactivate
+		
+	; Update Position
+		ld de, testRoomTonbowStruct.yVel - testRoomTonbowStruct.state
+		add hl, de									; HL -> testRoomTonbowStruct.yVel
+    call BaseEntityClass@UpdateEntityPosition	; HL -> testRoomTonbowStruct.cc
 `````
 are meant to be useful when debugging by allowing the programmer to see what value HL is supposed to be pointing at, while they can check in the debugger what value HL is actually pointing at. 
 
