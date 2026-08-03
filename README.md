@@ -1,2 +1,26 @@
 # SMS-Tonbow-Engine
 The official Steelfinger Studios engine for creating Master System games in Z80 assembly.
+
+## Features
+- Background graphics support
+- Sprite handling
+  - Flicker
+  - Metasprites
+- Entity handling
+  - High priority entities
+  - Low priority entities
+- Game State Handling
+- Controller Handling
+  - MD Start button support
+
+## Description
+This is a basic engine for getting a game up and running faster than starting from scratch. It is best thought of as an example template. It has many starter files that should be used to keep structure consistent throughout a project. It also has several commented out sections for alternative settings and handling, such as the ROM size and memory layout. 
+
+You will likely need to read through and understand the systems in play in order to actually build anything from this, which is why I have included verbose comments around every corner to clue the reader into what is supposed to be happening at both a high level, and a low level. Comments such as:
+
+`````
+...
+inc hl      ; HL -> entity.state
+...
+`````
+are meant to be useful when debugging by allowing the programmer to see what value HL is supposed to be pointing at, while they can check in the debugger what value HL is actually pointing at. 
