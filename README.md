@@ -65,5 +65,3 @@ This is still a work-in-progress, so there's still a lot to get done, but it wil
 - Decompression
 - Example Splash Screen
 - Test Room (Example controllable screen)
-
-#### The SMS Tonbow Engine was made entirely **without** the assistance of generative AI.
