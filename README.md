@@ -23,3 +23,14 @@ ld hl, entity.0.updateEntityRoutinePointerHi    ; HL -> entity.0.updateEntityRou
 inc hl                                          ; HL -> entity.0.state
 `````
 are meant to be useful when debugging by allowing the programmer to see what value HL is supposed to be pointing at, while they can check in the debugger what value HL is actually pointing at. 
+
+
+## TODO
+- Fade to black
+- Fade in
+- Collision handling
+- Compression
+- Animation Handling
+- Decompression
+- Example Splash Screen
+- Test Room (Example controllable screen)
