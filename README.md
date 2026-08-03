@@ -36,7 +36,7 @@ You will likely need to read through and understand the systems in play in order
 		add hl, de									; HL -> testRoomTonbowStruct.yVel
     	call BaseEntityClass@UpdateEntityPosition	; HL -> testRoomTonbowStruct.cc
 `````
-are meant to be useful when debugging by allowing the programmer to see what value HL is supposed to be pointing at, while they can check in the debugger what value HL is actually pointing at. 
+are meant to be useful when debugging by allowing the programmer to see what value, for instance, HL is *supposed* to be pointing at, while they can check in the debugger what value HL is *actually* pointing at. 
 
 
 ## TODO
