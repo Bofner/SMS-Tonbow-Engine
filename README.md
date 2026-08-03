@@ -2,6 +2,8 @@
 
 The official Steelfinger Studios engine for creating Master System games in Z80 assembly.
 
+The purpose of the SMS Tonbow Engine is for getting a Sega Master System assembly game up and running faster than starting from scratch. It is best thought of as an example template. It has many starter files that should be used to keep structure consistent throughout a project. It also has several commented out sections for alternate settings and handling, such as the ROM size and memory layout. 
+
 ## Features
 
 - Background graphics support
@@ -14,10 +16,6 @@ The official Steelfinger Studios engine for creating Master System games in Z80 
 - Game State Handling
 - Controller Handling
   - MD Start button support
-
-## Description
-
-The purpose of the SMS Tonbow Engine is for getting a Sega Master System assembly game up and running faster than starting from scratch. It is best thought of as an example template. It has many starter files that should be used to keep structure consistent throughout a project. It also has several commented out sections for alternate settings and handling, such as the ROM size and memory layout. 
 
 ## How to use
 
