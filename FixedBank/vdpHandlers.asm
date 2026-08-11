@@ -1,39 +1,12 @@
-; ================================================================================
-; General VDP Functions
-; ================================================================================
-
-; Tells VDP where it should be writing/reading data from in VRAM
-; Parameters: HL = address
-; Affects: No registers
-SetVDPAddress:
-    push af                     ; For safe keeping
-        ld a, l                 ; Little endian
-        out (PORT_VDP_ADDRESS), a     
-        ld a, h
-        out (PORT_VDP_ADDRESS), a
-    pop af
-    ret
-
 
 ; ================================================================================
 
 
-; Copies data to the VRAM
-; Parameters: HL = data address, BC = data length
-; Affects: A, HL, BC
-CopyToVDP:
-    
--:  ld a, (hl)                  ; Get data byte from location @ HL
-    out (VDP_DATA), a
-    inc hl                      ; Point to next data byte
-    dec bc                      ; Decrease our counter
-    ld a, b
-    or c
-    jr nz, -
-    ret
-
+; ================================================================================
+; Non-RST VDP Routines
 ; ================================================================================
 
+.SECTION "Non-RST VDP Routines"
 ; Copies data to the VRAM quickly, and only 127-bytes
 ; Parameters: HL = data address, B = data length
 ; Affects: HL, BC
@@ -69,13 +42,13 @@ WriteTextToBackground:
 ;             C = Which VDP regiseter $8(register#)
 ; Affects: A, B, C, HL
 SetVDPRegisters:
--:  ld a,(hl)                            ;  load one byte of data into A.
-    out (PORT_VDP_ADDRESS),a                   ;  output data to VDP command port.
-    ld a,c                               ;  load the command byte.
-    out (PORT_VDP_ADDRESS),a                   ;  output it to the VDP command port.
-    inc hl                               ;  inc. pointer to next byte of data.
-    inc c                                ;  inc. command byte to next register.
-    djnz -                               ;  jump back to '-' if b > 0.   
+-:  ld a,(hl)                            ; load one byte of data into A.
+    out (PORT_VDP_ADDRESS),a             ; output data to VDP command port.
+    ld a,c                               ; load the command byte.
+    out (PORT_VDP_ADDRESS),a             ; output it to the VDP command port.
+    inc hl                               ; inc. pointer to next byte of data.
+    inc c                                ; inc. command byte to next register.
+    djnz -                               ; jump back to '-' if b > 0.   
     ret
 
 ; ================================================================================
@@ -101,7 +74,7 @@ UpdateVDPRegister:
 ClearVRAM:  
     ; First, let's set the VRAM write address to $0000
     ld hl, $0000 | VRAM_WRITE
-    call SetVDPAddress
+    rst SetVDPAddress
     ; Next, let's clear the VRAM with a bunch of zeros
     ld bc, $4000        ; Counter for our zeros in VRAM
 -:  xor a
@@ -154,10 +127,10 @@ FadedPaletteEnd:
 LoadBackgroundPalette:
 ; Load Background Palette in VRAM
     ld hl, $C000 | CRAM_WRITE
-    call SetVDPAddress
+    rst SetVDPAddress
     ld hl, currentBGPal.color0
     ld bc, $10
-    call CopyToVDP
+    rst CopyToVDP
 
     ret
 
@@ -171,10 +144,10 @@ LoadBackgroundPalette:
 LoadSpritePalette:
 ; Load Sprite Palette in VRAM
     ld hl, $C010 | CRAM_WRITE
-    call SetVDPAddress
+    rst SetVDPAddress
     ld hl, currentSPRPal.color0
     ld bc, $10
-    call CopyToVDP
+    rst CopyToVDP
 
     ret
 
@@ -193,3 +166,5 @@ PalBufferWrite:
     djnz PalBufferWrite
 
     ret
+
+.ENDS

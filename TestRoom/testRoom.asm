@@ -86,37 +86,37 @@ InitTestRoom:
     @VideoRAM:
     ; Load TestRoom Studios Screen
         ld hl, $0000 | VRAM_WRITE
-        call SetVDPAddress
+        rst SetVDPAddress
         ld hl, TestRoomTilesSMS
         ld bc, TestRoomTilesSMSEnd-TestRoomTilesSMS
-        call CopyToVDP
+        rst CopyToVDP
 
     ; Load Tonbow Font
         ld hl, FONT_VRAM_ADDRESS | VRAM_WRITE
-        call SetVDPAddress
+        rst SetVDPAddress
         ld hl, TonbowFontTiles
         ld bc, TonbowFontTilesEnd-TonbowFontTiles
-        call CopyToVDP
+        rst CopyToVDP
 
         
     
 /*     ; Load SteelFginer Studios Sprites
         ld hl, $2000 | VRAM_WRITE
-        call SetVDPAddress
+        rst SetVDPAddress
         ld hl, TestRoomTilesSMS
         ld bc, TestRoomTilesSMSEnd-TestRoomTilesSMS
         call CopyToVDP  */
         
     ; Load Map
         ld hl, $3800 | VRAM_WRITE
-        call SetVDPAddress
+        rst SetVDPAddress
         ld hl, TestRoomMapSMS
         ld bc, TestRoomMapSMSEnd-TestRoomMapSMS
-        call CopyToVDP
+        rst CopyToVDP
 
     ; Load Hello World Message
         ld hl, $3800 | VRAM_WRITE
-        call SetVDPAddress
+        rst SetVDPAddress
         ld hl, HelloASCIIWorld
         ld bc, HelloASCIIWorldEnd-HelloASCIIWorld
         call WriteTextToBackground

@@ -17,6 +17,8 @@
 	ld (hl), d						; Updated entityUpdateRoutinePointer
     inc hl                          ; HL -> entity.state			
 	ld (hl), INITIALIZED            ; entity.state = INITIALIZED
+    inc hl                          ; HL -> entity.prevState
+    ld (hl), INITIALIZED            ; entity.prevState = INITIALIZED
 	inc hl                          ; HL -> entity.type
     ld (hl), a                      ; Updated entity.type
     inc hl                          ; HL -> entity.timer

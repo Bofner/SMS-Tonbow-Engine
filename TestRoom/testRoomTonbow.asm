@@ -38,11 +38,10 @@ TestRoomTonbowEntityClass:
 ; ==============================================================
 ; 
 ; 
-; Parameters: DE = testRoomTonbow.state (Should be coming from EntityList@UpdateEntities)
+; Parameters: HL = testRoomTonbow.state (Should be coming from EntityList@UpdateEntities)
 ; Returns: None
 ; Affects: DE
 	@Update:
-		ex de, hl									; HL -> testRoomTonbow.state
 	; Choose what to do based off state
 		ld a, DEACTIVATE_ENTITY
 		cp (hl)

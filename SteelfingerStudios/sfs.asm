@@ -74,10 +74,10 @@ InitSFS:
     @VideoRAM:
     ; Load SteelFinger Studios Screen
         ld hl, $0000 | VRAM_WRITE
-        call SetVDPAddress
+        rst SetVDPAddress
         ld hl, SteelFingerTilesSMS
         ld bc, SteelFingerTilesSMSEnd-SteelFingerTilesSMS
-        call CopyToVDP
+        rst CopyToVDP
     /*     
     ; Load SteelFginer Studios Sprites
         ld hl, $2000 | VRAM_WRITE
@@ -88,17 +88,17 @@ InitSFS:
         
     ; Load Map
         ld hl, $3800 | VRAM_WRITE
-        call SetVDPAddress
+        rst SetVDPAddress
         ld hl, SteelFingerStudiosMapSMS
         ld bc, SteelFingerStudiosMapSMSEnd-SteelFingerStudiosMapSMS
-        call CopyToVDP
+        rst CopyToVDP
 
 
 ; ==============================================================
 ;  Memory (Structures, Variables & Constants) 
 ; ==============================================================
     @Sprites:
-    ;  We need to build one BIG shimmer out of 6 smaller shimmer bits
+    ;  We need to build one BIG shimmer out of 10 smaller shimmer bits
 /*         .DEF    BIG_SHIMMER_WIDTH   $06
         .DEF    BIG_SHIMMER_HEIGHT  $06
         .DEF    BIG_SHIMMER_CC      $00
@@ -147,8 +147,6 @@ MainLoopSFS:
     nop
 
     ret
-
-
 
 
 

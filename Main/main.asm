@@ -21,12 +21,14 @@
 
 ; For Projects bigger than 32k
 /* .MEMORYMAP	
-    SLOTSIZE $7FF0	
-    SLOT 0 $0000	
-    SLOTSIZE $10	
-    SLOT 1 $7FF0	
+    SLOTSIZE $7FF0	    
+    SLOT 0 $0000	    "FIXED_BANK_0"	
+    SLOTSIZE $10	    
+    SLOT 1 $7FF0	    "FIXED_BANK_1"
     SLOTSIZE $4000	
-    SLOT 2 $8000	
+    SLOT 2      $8000   "SWAPABLE_BANK"     ; $4000 of swapable ROM
+    SLOT 3      $C000   "RAM_SLOT"			; RAM starts here
+	SLOT 4      $E000   "ECHO_RAM_SLOT"		; Echo RAM starts here
     DEFAULTSLOT 2	
 .ENDME	 
 .ROMBANKMAP	
@@ -85,12 +87,16 @@
     map "0" to ":"  = NUM_VRAM_CHAR_ADDRESS
     map "A" to "Z"  = FONT_VRAM_CHAR_ADDRESS  
 .ENDA
+.DEFINE     NEXT_FRAME_NOT_READY    $00
+.DEFINE     NEXT_FRAME_READY        $11
 
 ; Screen constants
 .DEFINE     UP_BOUNDS               $02
 .DEFINE     DOWN_BOUNDS             $BD
 .DEFINE     LEFT_BOUNDS             $05
 .DEFINE     RIGHT_BOUNDS            $FD
+
+
 
 
 ; ==============================================================
@@ -108,6 +114,37 @@
     di                          ; Disable interrupts
     im 1                        ; Interrupt mode 1
     jp MainInit            ; Jump to the initialization program
+
+; ================================================================================
+; RST VDP Routines
+; ================================================================================
+
+; Tells VDP where it should be writing/reading data from in VRAM
+; Parameters: HL = address
+; Affects: No registers
+.BANK 0 SLOT 0
+.ORG $0008
+SetVDPAddress:
+    ld a, l                 ; Little endian
+    out (PORT_VDP_ADDRESS), a     
+    ld a, h
+    out (PORT_VDP_ADDRESS), a
+    ret
+
+; Copies data to the VRAM
+; Parameters: HL = data address, BC = data length
+; Affects: A, HL, BC
+.BANK 0 SLOT 0
+.ORG $0010
+CopyToVDP:
+-:  ld a, (hl)                  ; Get data byte from location @ HL
+    out (VDP_DATA), a
+    inc hl                      ; Point to next data byte
+    dec bc                      ; Decrease our counter
+    ld a, b
+    or c
+    jr nz, -
+    ret
 
 ; ==============================================================
 ;  Interrupt Handlers Section
@@ -156,61 +193,41 @@
 ;  Boiler Variables 
 ; ============================================================== 
 .RAMSECTION "Global Variables" BANK 0 SLOT "RAM_SLOT"
-    systemHardware              db      ; Are we running SMS or an SG-1000 variant?
+    ; Hardware
+    systemHardware              DB      ; Are we running SMS or an SG-1000 variant?
 
-    VDPStatus                   db      ; Holds VDP Status from the interrupt
-                                        ; Bit 7:     1 = VBlank
-                                        ; Bit 6:     1 = >=9 sprites on raster
-                                        ; Bit 5:     1 = Sprite collision
-                                        ; Bit 4-0:   No function
-
-; Background 
-; Any special parallax screen scrolling will be declared within the level file
-	nextHBlankStep  	        dw      ; Variable that tells where to go for next HBlank
-	frameFinish			        db		; $00 = NO_FINISH, 
-                                        ; $01 = WRITE_FINISH, 
-                                        ; $11 = VBLANK_FINISH
-	frameCount     		        db      ; Used to count frames in intervals of 60	
-	targetBGPal                 instanceof paletteStruct		
+    ; Palettes
+	targetBGPal                 INSTANCEOF paletteStruct		
                                         ; Target BG palette for a fade in
-    currentBGPal		        instanceof paletteStruct		
+    currentBGPal		        INSTANCEOF paletteStruct		
                                         ; Current BG palette for a fade in
-    targetSPRPal		        instanceof paletteStruct		
+    targetSPRPal		        INSTANCEOF paletteStruct		
                                         ; Target SPR palette for a fade in
-    currentSPRPal		        instanceof paletteStruct		
+    currentSPRPal		        INSTANCEOF paletteStruct		
                                         ; Current SPR palette for a fade in
 
 ; Game State
-    RAM_JumpToCorrectGameState  dsb $04 ; Address in RAM that is used to 
+    RAM_JumpToCorrectGameState  DSB $04 ; Address in RAM that is used to 
                                         ; call ${currentGameState}
                                         ; ret
-    changeGameStateFlag         db      ; Do we need to change Game state?
-    sceneComplete               db      ; Is the current scene finished?
-	holdGameState				dw		; Game State Held for Fades or some other future reason
-	holdGameStateBank			db		; Game State Bank Held for Fades or some other future reason
-	nextGameState				dw		; The Game State we want to switch to
-	nextGameStateBank			db		; The bank data for the next game state
+    changeGameStateFlag         DB      ; Do we need to change Game state?
+	holdGameState				DW		; Game State Held for Fades or some other future reason
+	holdGameStateBank			DB		; Game State Bank Held for Fades or some other future reason
+	nextGameState				DW		; The Game State we want to switch to
+	nextGameStateBank			DB		; The bank data for the next game state
 
-; Hardware version
-	modelType					db		; Are we running on DMG ($00), SGB ($01), or CGB ($02)
-	
+; Universal variables
+    universalTimer              DB      ; A universal timer to synchronize events
+    sceneComplete               DB      ; Is the current scene finished?
+    frameFinish			        DB      ; $00 = NO_FINISH, 
+                                        ; $01 = WRITE_FINISH, 
+                                        ; $11 = VBLANK_FINISH
+
 ; 8-Bit Variables
-	aux8BitVar        			db		; Used for any kind of 8-bit variable we need
-	temp8BitA					db		; Temporary 8-bit Data Storage
-	temp8BitB					db		; Temporary 8-bit Data Storage
-	temp8BitC					db		; Temporary 8-bit Data Storage
-	temp8BitD					db		; Temporary 8-bit Data Storage
-	temp8BitE					db		; Temporary 8-bit Data Storage
-	temp8BitF					db		; Temporary 8-bit Data Storage
+	temp8Bit					DB		; Temporary 8-bit data storage
 
 ; 16-Bit Variables
-	aux16BitVar        			dw		; Used for any kind of 16-bit variable we need
-	ptrA16Bit 					dw		; Used to point to a 16 bit address
-	ptrB16Bit 					dw		; Used to point to a 16 bit address
-	ptrC16Bit 					dw		; Used to point to a 16 bit address
-	ptrD16Bit 					dw		; Used to point to a 16 bit address
-	ptrE16Bit 					dw		; Used to point to a 16 bit address
-	ptrF16Bit 					dw		; Used to point to a 16 bit address
+	temp16Bit 					DW		; Temporary 16-bit data storage or used to point to a 16 bit address
     
 .ENDS
 
@@ -282,12 +299,16 @@ MainInit:
         call ClearVRAM
 
 ; ==============================================================
-;  Setup general sprite variables
+;  Setup universal variables
 ; ==============================================================
     @Variables:
-    ; Start frameCount at zero
         xor a
-        ld hl, frameCount
+        ld hl, universalTimer
+        ld (hl), a
+        inc hl                  ; HL -> sceneComplete
+        ld (hl), a
+        inc hl                  ; HL -> frameFinish
+        ld a, NEXT_FRAME_READY
         ld (hl), a
 
 ; ==============================================================
@@ -316,19 +337,34 @@ MainInit:
     @Interrupts:
         ei
 
+; The main game loop. Completes all logic needed for any given part of the game
 MainLoop:
     halt
+    ; Check if the next frame is ready to be drawn
+    @CheckSlowdown:
+        ld hl, frameFinish
+        ld a, (hl)
+        cp NEXT_FRAME_READY
+        jr nz, MainLoop                 ; If no, then don't update VDP or game logic
+    
+    ; The actual logic needed for the game to function as intended
+    @MainGameLogic:
+        ld (hl), NEXT_FRAME_NOT_READY   ; We are not ready to draw the next frame yet
 
-    ; Run important VDP and graphics updates first
-    call SpriteHandlerClass@UpdateSAT
+        ; Run important VDP and graphics updates first
+        call SpriteHandlerClass@UpdateSAT
 
-    ; Poll for controller inputs
-    call ControllerInputHandlerClass@PollForInputs
+        ; Poll for controller inputs
+        call ControllerInputHandlerClass@PollForInputs
 
-    call RAM_JumpToCorrectGameState
+        call RAM_JumpToCorrectGameState
 
-    ; Update the Entity List
-    call EntityListClass@UpdateAllEntities
+        ; Update the Entity List
+        call EntityListClass@UpdateAllEntities
+
+        ; ; Update frameFinish so we can draw the next frame after VBlank
+        ld a, NEXT_FRAME_READY
+        ld (frameFinish), a
 
     jr MainLoop
 

@@ -1,13 +1,15 @@
 {
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
 	"version": "2.0.0",
 	"tasks": [
 		{
             "label": "Launch Emulicious",
             "windows":{
-				"command": "javaw -jar Emulicious/Emulicious.jar output.sms"
+				"command": "start \"\" javaw -jar ../../Emulicious-with-Java/Emulicious.jar output.sms"
 			},
 			"linux":{
-				"command": "nohup java -jar Emulicious/Emulicious.jar output.sms"
+				"command": "nohup java -jar ../../Emulicious-with-Java/Emulicious.jar output.sms"
 			},
             "type": "shell",
             "group": {
@@ -20,13 +22,13 @@
 			"label": "SMS Batch File Run",
 			"type": "shell",
 			"windows":{
-				"command": "../Scripts/buildSMS.bat"
+				"command": "..\\..\\..\\assembler\\buildSMS.bat"
 			},
 			"linux":{
-				"command": "bash ../Scripts/buildSMS.sh"
+				"command": "bash ../../../assembler/buildSMS.sh"
 			},
 			"options": {
-				"cwd": "${fileDirname}/../Main"
+				"cwd": "${workspaceFolder}/Main"
 			},
 			"problemMatcher": [],
 			"group": {

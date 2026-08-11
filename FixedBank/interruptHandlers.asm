@@ -1,74 +1,76 @@
-; ==============================================================
-;  Interrupt Handler
-; ==============================================================
-
-.SECTION "Interrupt Handler"
-InterruptHandler:
-;Get the status of the VDP
-    push af
-        in a,(PORT_VDP_ADDRESS)     ;Get status of VDP
-                                    ;Bit 7:     1 = VBlank 0 = HBlank
-                                    ;Bit 6:     1 = >=9 sprites on raster
-                                    ;Bit 5:     1 = Sprite collision
-                                    ;Bit 4-0:   No function
-        ld (VDPStatus), a           ;Save to check if we are at VBLANK
-        or a                        ;Check if POS or NEG (Bit 7 OFF or ON)
-    pop af
-    ei
-    reti
+;  ==============================================================
+;   Interrupt Handler
+;  ==============================================================
+.RAMSECTION "Interrupt Variables" BANK 0 SLOT "RAM_SLOT"
+    interruptHandler.VDPStatus                  DB  ; Holds VDP Status from the interrupt
+                                                    ; Bit 7:     1 = VBlank
+                                                    ; Bit 6:     1 = >=9 sprites on raster
+                                                    ; Bit 5:     1 = Sprite collision
+                                                    ; Bit 4-0:   No function
+    interruptHandler.nextHBlankStepPointer      DW  ; Variable that tells where to go for next HBlank
 .ENDS
 
 
-; ==============================================================
-;  Pause button handler
-; ==============================================================
+.SECTION "Interrupt Handler"
+; Determines whether we are at VBlank or HBlank
+InterruptHandler:
+    push af
+        in a,(PORT_VDP_ADDRESS)     ; Get status of VDP
+                                    ; Bit 7:     1 = VBlank 0 = HBlank
+                                    ; Bit 6:     1 = >=9 sprites on raster
+                                    ; Bit 5:     1 = Sprite collision
+                                    ; Bit 4-0:   No function
+        ld (interruptHandler.VDPStatus), a           ; Save to check if we are at VBLANK
+        or a                        
+        jp m, VBlank                ; Check if POS or NEG (Bit 7 OFF or ON)
+        jp HBlank                   ; If POS, then HBlank
+ReturnFromMaskableInterrupt:
+    pop af
+    ei
+    reti
+
+.ENDS
+
+
+;  ==============================================================
+;   Pause button handler
+;  ==============================================================
 .SECTION "Pause Handler"
+; Handle the NMI for the Pause Button
 PauseHandler:
     nop
     nop
     nop
+PauseHandlerEnd:
     ei
     retn
 .ENDS
 
 
 
-;=========================================================
-; HBlank
-;=========================================================
+; =========================================================
+;  HBlank
+; =========================================================
 .SECTION "HBlank Handler"
 HBlank:
-    ei
-;Leave
-    reti
+    nop
+HBlankEnd:
+    jp ReturnFromMaskableInterrupt
 
 .ENDS
 
 
-;=========================================================
-; VBlank
-;=========================================================
+; =========================================================
+;  VBlank
+; =========================================================
 .SECTION "VBlank Handler"
-;If we are on the last scanline
+; We finished drawing the screen, its time for VBlank
 VBlank:
-;We are at VBlank
-    ld hl, VDPStatus
-    bit 7, a                        ;A = VDPStatus already
-    jr z, +
-    set 7, (hl)                     ;Sprite collision 
-+:
-;Update frame count up to 60
-    ld hl, frameCount               ;Update frame count
-    ld a, 60                        ;Check if we are at 60
-    cp (hl)
-    jr nz, +                        ;If we are, then reset
-ResetFrameCount:
-    ld (hl), -1
-+:
-    inc (hl)                        ;Otherwise, increase
-
-EndVBlank:
-    ei
-;Leave
-    reti
+    push hl
+    ; Add one each frame
+        ld hl, universalTimer           ; Update frame count
+        inc (hl)                        ; Otherwise, increase
+VBlankEnd:
+    pop hl
+    jp ReturnFromMaskableInterrupt
 .ENDS

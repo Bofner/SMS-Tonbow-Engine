@@ -15,21 +15,22 @@
 .STRUCT entitySkeleton
 ; General Entity info (13 Bytes)
 	; updateRoutinePointer      dw      ; A Pointer to the Entity's Update Subroutine
-	updateRoutinePointerLo		db		; \ Pointer split into HI and LO for convenience
-	updateRoutinePointerHi		db		; /
-	state                       db      ; Current condition of Entity. DEAD, AI_1, DYING, SPAWING etc.
-	type                        db      ; Projectile, Player, Enemy etc.
-	timer                       db      ; Basic all-purpose timer. Animation, AI routine
+	updateRoutinePointerLo		DB		; \ Pointer split into HI and LO for convenience
+	updateRoutinePointerHi		DB		; /
+	state                       DB      ; Current condition of Entity. DEAD, AI_1, DYING, SPAWING etc.
+	prevState					DB		; State of entity on the previous frame
+	type                        DB      ; Projectile, Player, Enemy etc.
+	timer                       DB      ; Basic all-purpose timer. Animation, AI routine
 ; Y-coordinate info  
-	yVel                        db      ; Velocity %0YYYFFFF 
-	yFracPosLo                	db      ; \ Fractional position $UNUSED.MSB,WHOLE.MSB $WHOLE.LSB,FRAC.LSB
-	yFracPosHi					db		; /
-	yPos                        db      ; The Y coord of the Entity's top left corner.
+	yVel                        DB      ; Velocity %0YYYFFFF 
+	yFracPosLo                	DB      ; \ Fractional position $UNUSED.MSB,WHOLE.MSB $WHOLE.LSB,FRAC.LSB
+	yFracPosHi					DB		; /
+	yPos                        DB      ; The Y coord of the Entity's top left corner.
 ; X-coordinate info  
-	xVel                        db      ; Velocity %0XXXFFFF 
-	xFracPosLo                	db      ; \ Fractional position $UNUSED.MSB,WHOLE.MSB $WHOLE.LSB,FRAC.LSB
-	xFracPosHi					db		; /
-	xPos                        db      ; The X coord of the Entity's top left corner. 
+	xVel                        DB      ; Velocity %0XXXFFFF 
+	xFracPosLo                	DB      ; \ Fractional position $UNUSED.MSB,WHOLE.MSB $WHOLE.LSB,FRAC.LSB
+	xFracPosHi					DB		; /
+	xPos                        DB      ; The X coord of the Entity's top left corner. 
 ; ---------------------------------------------------------------------------------------------------
 ; Unique Entity traits down here 
 	

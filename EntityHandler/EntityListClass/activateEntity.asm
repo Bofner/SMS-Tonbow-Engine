@@ -4,7 +4,7 @@
 ; @ActivateEntity:
 ; Parameters:  IXl = Player Number (0 -> NOT Player), A = HI_ENTITY or LO_ENTITY
 ; Returns: HL -> eventID
-; Affects: A, BC, DE, HL, aux8BitVar
+; Affects: A, BC, DE, HL, temp8Bit
 @ActivateEntity:
 ; Check if High Priority Entity
 		cp HI_ENTITY
@@ -23,7 +23,7 @@
 		ld de, entityList.bitmap.0
 		ld c, ENTITY_BITMAP_START							; C will act like our currentBitmapLocation ($BYTE,$BIT --> $0-3,0-7)
 															; In this case, we are starting at BYTE $00, BIT %0
-		ld hl, aux8BitVar									; Use as a counter
+		ld hl, temp8Bit										; Use as a counter
 		ld (hl), ENTITY_BITMAP_START						; Start at $00
 	
 	@@ActivateFirstInactiveEntity:
@@ -41,9 +41,9 @@
 			add ACTIVE_ENTITY_INC_BYTE	;  } reset the BIT position
 			ld c, a						; /
 			inc de
-			ld a, (aux8BitVar)
+			ld a, (temp8Bit)
 			add a, 8
-			ld (aux8BitVar), a		; Update Entity Counter
+			ld (temp8Bit), a		; Update Entity Counter
 		@@@CheckForInactiveEntity:
 		; Search through the list for the first inactive Entity
 			ld a, (de)					; A = (bitmap.n)
@@ -96,7 +96,7 @@
 	@@ActivateInEntityList:
 	; Get to the correct location in the Entity List
 		ld de, entityList.entity.0.state
-		ld a, (aux8BitVar)						; A = Entity List Position Counter
+		ld a, (temp8Bit)						; A = Entity List Position Counter
 		ld h, $00
 		ld l, a									; HL = Entity List Position Counter
 		add hl, hl								; x2
@@ -157,7 +157,7 @@
 ; @ActivateHighPriorityEntity
 ; Parameters:  (Coming from ActivateEntity) ixl = Player Number (0 -> NOT Player)
 ; Returns: HL -> eventID
-; Affects: A, BC, DE, HL, aux8BitVar
+; Affects: A, BC, DE, HL, temp8Bit
 	@ActivateHighPriorityEntity:
 	; Check if we can add the entity to the list
 		ld hl, entityListHi.highPriorityEntityBitmap

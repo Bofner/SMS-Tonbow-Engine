@@ -4,7 +4,7 @@
     @UpdateSAT:
     ; Set vPositions
         ld hl, VPOS_VRAM | VRAM_WRITE           ; Telling the VDP where to write this data
-        call SetVDPAddress                  
+        rst SetVDPAddress                  
         ld a, (spriteHandler.spriteCount)
         ld b, a                             ; Load the SAT with only the sprites' vPos that exist
         inc b                               ; As well as the terminator byte
@@ -13,7 +13,7 @@
         otir                                ; Write contents of HL to C with B bytes
     ; Set xPos and CC
         ld hl, HPOS_CC_VRAM | VRAM_WRITE    ; Telling the VDP where to write this data
-        call SetVDPAddress                  ; \
+        rst SetVDPAddress                  ; \
         ld a, (spriteHandler.spriteCount)   ;  }
         add a, a                            ;  } Load the SAT with only the sprites' xPos and cc that exist
         ld b, a                             ;  } And the terminator byte
@@ -27,4 +27,3 @@
         ld (hl), 0
 
         ret
-

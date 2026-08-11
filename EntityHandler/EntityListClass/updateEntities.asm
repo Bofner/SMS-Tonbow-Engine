@@ -177,24 +177,23 @@
 			inc a
 			ld (entityList.currentBitmapLocation), a	; Update our current Bitmap Location
 			srl c
-			jr nc, @@UpdateSingleEntityEnd				; Check if the current entity is active or not
+			jr nc, @@UpdateSingleEntityEnd
 	; Update a single entity from the bitmap
 		@@UpdateSingleEntity:
 			push bc
 			push hl
 			push de
-				; Jump/call the Entitiy's Event Handler
-					; HL -> entity.CURRENT.updateRoutinePointerLo
-					ex de, hl					; Swap HL and DE, DE = entity.CURRENT.updateRoutinePointerLo
-					ld a, (de)
-					ld l, a
-					inc de                      ; DE -> entity.CURRENT.updateRoutinePointerHi
-					ld a, (de)
-					ld h, a						; HL -> EntityClass@EventHandler
-					inc de                      ; DE -> entity.CURRENT.state
+			; Call the Entitiy's Event Handler
+				; HL -> entity.CURRENT.updateRoutinePointerLo
+				ld a, (hl)
+				ld ixl, a
+				inc hl                      ; HL -> entity.CURRENT.updateRoutinePointerHi
+				ld a, (hl)
+				ld ixh, a					; IX -> EntityClass@EventHandler
+				inc hl                      ; HL -> entity.CURRENT.state
 				ld bc, @@ReturnFromEntityUpdate
-				push bc						; Make our JP HL function as a CALL HL
-				jp hl						; call EntityClass@EventHandler
+				push bc						; Make our JP (IX) function as a CALL (IX)
+				jp ix						; call EntityClass@EventHandler
 				pop bc						; Never reached
 			@@ReturnFromEntityUpdate:
 				ld hl, entityList.entitiesUpdated
@@ -236,10 +235,6 @@
 			add a, NEXT_BITMAP
 			and ACTIVE_ENTITY_BYTE_MASK
 			ld c, a										; C = $BitmapNumber.NEXT,0
-			; Check if we have any entities left, just in case they got deactivated:
-			ld a, (entityList.numEntities)
-			cp $00
-			ret z
 			; Check if this bitmap is empty
 			xor a
 			cp (hl)
@@ -297,18 +292,17 @@
 				push bc
 				push hl
 				push de	
-					; Jump/call the Entitiy's Event Handler
+				; Call the Entitiy's Event Handler
 					; HL -> entity.CURRENT.updateRoutinePointerLo
-					ex de, hl					; Swap HL and DE, DE -> entity.CURRENT.entityUpdatePointerLo
-					ld a, (de)
-					ld l, a
-					inc de                      ; DE -> entity.CURRENT.entityUpdatePointerHi
-					ld a, (de)
-					ld h, a						; HL -> EntityClass@UpdateRoutineAddress
-					inc de                      ; DE -> entity.CURRENT.state
+					ld a, (hl)
+					ld ixl, a
+					inc hl                      ; HL -> entity.CURRENT.updateRoutinePointerHi
+					ld a, (hl)
+					ld ixh, a					; IX -> EntityClass@EventHandler
+					inc hl                      ; HL -> entity.CURRENT.state
 					ld bc, @@@@ReturnFromEntityUpdate
 					push bc						; Make our JP HL function as a CALL HL
-					jp hl						; call EntityClass@EventHandler
+					jp ix						; call EntityClass@EventHandler
 					pop bc						; Never reached, just for PUSH/POP color consistency
 				@@@@ReturnFromEntityUpdate:
 					xor a
