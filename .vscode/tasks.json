@@ -1,0 +1,39 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+            "label": "Launch Emulicious",
+            "windows":{
+				"command": "javaw -jar Emulicious/Emulicious.jar output.sms"
+			},
+			"linux":{
+				"command": "nohup java -jar Emulicious/Emulicious.jar output.sms"
+			},
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn":["SMS Batch File Run"]
+        },
+		{
+			"label": "SMS Batch File Run",
+			"type": "shell",
+			"windows":{
+				"command": "../Scripts/buildSMS.bat"
+			},
+			"linux":{
+				"command": "bash ../Scripts/buildSMS.sh"
+			},
+			"options": {
+				"cwd": "${fileDirname}/../Main"
+			},
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+			}
+		}
+	]
+
+	
+}
