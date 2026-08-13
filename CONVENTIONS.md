@@ -1,15 +1,6 @@
 # Tonbow Engine Conventions
 This is list of all conventions maintained throughout the Tonbow Engine in order to make code more understandable. CONVENTIONS.md is not required reading. Most of the patterns of conventions should be easy to pick up. This document exists simply as a place to establish and check on conventions.
 
-Register values are used in the following way for commented code:
-```
-16BitRegister -> someVariable        ; A 16-bit register points to a value in RAM or ROM ie) HL -> variableValue.anotherValue
-
-16BitRegister = SOME_VALUE           ; A 16-bit register is equal to a 16-bit value in RAM or ROM ie) HL = SOME_VALUE 
-
-8BitRegister = SOME_VALUE            ; An 8-bit register is equal to an 8-bit value in RAM ie) A = variableValue.anotherValue 
-```
-
 | Item | Convention | Exceptions | Notes |
 | -------- | ------- | ------- | ------- |
 | Labels/Addresses | StartingCapsCamelCase: | RAM_JumpToCorrectGameState | This exception has code run in RAM |
@@ -20,6 +11,9 @@ Register values are used in the following way for commented code:
 | Variables/RAM | lowerCaseStartingCamelCase | - | - |
 | Pointer | pointerNameLo, pointerNameHi | - | Pointers are broken into Low and High bytes for easy debugging |
 | - | - | - | - |
+
+
+## Comments
 
 All routines start with following comment:
 ```
@@ -43,6 +37,56 @@ Parent and Child Labels are given a comment above them denote why they exist:
         ...
 ```
 
-			
- 
- 
+Register values are used in the following way for commented code:
+```
+16BitRegister -> someVariable        ; A 16-bit register points to a value in RAM or ROM ie) HL -> variableValue.anotherValue
+
+16BitRegister = SOME_VALUE           ; A 16-bit register is equal to a 16-bit value in RAM or ROM ie) HL = SOME_VALUE 
+
+8BitRegister = SOME_VALUE            ; An 8-bit register is equal to an 8-bit value in RAM ie) A = variableValue.anotherValue 
+```
+
+## Classes			
+
+### Structure
+Classes are set up via folders in order to keep files from getting too long. The properties of the class are named in the *____EntityClass.asm* file. At a minimum, a class will be made up of at least this file. Any other files related to the entity are added via a WLA DX ``` .INCLUDE ``` directive within *____EntityClass.asm*. Files may contain a single routine, or several depending on their scope. For example **TBD**. 
+
+The *____EntityClass.asm* file always follows this pattern:
+```
+; ================================================================================
+;  Example Entity Class Constants
+; ================================================================================
+; Entity States
+.DEF	EXAMPLE_VALUE					$01
+
+; ================================================================================
+;  Example Entity Class Structure
+; ================================================================================
+; ==============================================================
+;  Entity Skeleton
+; ==============================================================
+.STRUCT exampleEntityStructure
+INSTANCEOF entitySkeleton
+; ---------------------------------------------------------------------------------------------------
+; Unique Entity traits down here 
+.ENDST
+
+.SECTION "Example Entity Class"
+; ================================================================================
+;  Example Entity Class
+; ================================================================================
+; Example Entity Class description
+ExampleEntityClass:
+
+...
+
+ExampleEntityClassEnd:
+.ENDS
+```
+
+With any necessary ```.INCLUDE```'s added between ```ExampleEntityClass:``` and ```ExampleEntityClassEND:```
+
+### Inheritance
+While inheritance isn't something natively supported in Z80, we can fake it by creating entities in the same form as others. All entities share the same attributes as the *BaseEntity*. This means that the routines in the *BaseEntity* folder can be used for any given entity so long as the parameters of the routine are satisfied. Any other Entity Types are built off of this foundation. 
+
+
