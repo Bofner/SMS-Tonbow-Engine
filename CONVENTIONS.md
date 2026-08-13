@@ -35,7 +35,7 @@ RoutineLabel:    ; NOTE: Label could be a Parent Label (ParentLabel:) or a Child
 ```
 
 ### Descriptive comments
-Parent and Child Labels are given a comment above them denote why they exist:
+Parent and Child Labels are given a comment above them denote why they exist.
 
 This comment is tabbed left of the Label in order to make important sections stand out more, unless the Label is already Left aligned, in which case, so will the comment. This style of commenting is also used to denote the high-level function of the proceeding code
 
