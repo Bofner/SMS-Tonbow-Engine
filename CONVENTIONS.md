@@ -4,9 +4,9 @@ This is list of all conventions maintained throughout the Tonbow Engine in order
 | Item | Convention | Exceptions | Notes |
 | -------- | ------- | ------- | ------- |
 | Labels/Addresses | ```StartingCapsCamelCase:``` | ```RAM_JumpToCorrectGameState``` | This exception has code run in RAM |
-| Parent Labels | ```ParentLabel:``` | ```DJNZ -``` | Parent Labels are left aligned|
+| Parent Labels | ```ParentLabel:``` | - | Parent Labels are left aligned|
 | Child Labels |``` @ChildLabel:``` | - | Child Labels are tabbed to the right once per @|
-| Local Labels | ```--:```, ```-:```, ```+:```, ```++:``` | - | Avoided at almost all costs. Descriptive Child Labels will **always** make debugging easier. Used for ```DJNZ``` because it only ever uses a single local label |
+| Local Labels | ```--:```, ```-:```, ```+:```, ```++:``` | ```DJNZ -``` | Avoided at almost all costs. Descriptive Child Labels will **always** make debugging easier. Used for ```DJNZ``` because it only ever uses a single local label |
 | ```PUSH```/```POP``` | - | - | Code following a ```PUSH``` is tabbed to the right once until the accompanying ```POP```. A dummy ```POP``` that can't be reached will be added in cases where one is not needed to preserve syntax coloring and make the code easier to read |
 | ```.STRUCT```, ```.ENUM```, ```.RAMSECTION```  | - | - | Data following these directives is tabbed to the right once |
 | ```.SECTION```  | - | - | Code following .SECTION is left aligned, unless led with a Child Label |
