@@ -12,8 +12,8 @@ This is list of all conventions maintained throughout the Tonbow Engine in order
 | Constants | ALL_CAPS_WITH_UNDERSCORE | - | - |
 | Variables/RAM | lowerCaseStartingCamelCase | - | - |
 | Pointer | pointerNameLo, pointerNameHi | - | Pointers are broken into Low and High bytes for easy debugging |
-| Instructions | - | - | Instructions are always lowercase in code but capitalized in comments |
-| Registers | - | - | Registers are always lowercase in code but capitalized in comments |
+| Instructions | neg ; NEG | - | Instructions are always lowercase in code but capitalized in comments |
+| Registers | ld a, $01 ; A = 1 | - | Registers are always lowercase in code but capitalized in comments |
 | - | - | - | - |
 
 
