@@ -115,4 +115,5 @@ While inheritance isn't something natively supported in Z80, we can fake it by c
 
 ## Tips
 
+### Programming
 Any ```CALL``` that needs to be made within strict timings (such as HBlank palette swapping, scroll updating or SAT updating) can be done faster by dedicating a space in the Zeropage for an ```RST``` instead.
