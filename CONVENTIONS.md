@@ -7,14 +7,19 @@ This is list of all conventions maintained throughout the Tonbow Engine in order
 | Parent Labels | ParentLabel: | - | Parent Labels are left aligned|
 | Child Labels | @ChildLabel: | - | Child Labels are tabbed to the right once per @|
 | PUSH/POP | - | - | Code following a PUSH is tabbed to the right once until the accompanying POP. A dummy POP that can't be reached will be added in cases where one is not needed to preserve syntax coloring and make the code easier to read |
+| .STRUCT, .ENUM, .RAMSECTION  | - | - | Data following these directives is tabbed to the right once |
+| .SECTION  | - | - | Code following .SECTION is left aligned, unless led with a Child Label |
 | Constants | ALL_CAPS_WITH_UNDERSCORE | - | - |
 | Variables/RAM | lowerCaseStartingCamelCase | - | - |
 | Pointer | pointerNameLo, pointerNameHi | - | Pointers are broken into Low and High bytes for easy debugging |
+| Instructions | - | - | Instructions are always lowercase in code but capitalized in comments |
+| Registers | - | - | Registers are always lowercase in code but capitalized in comments |
 | - | - | - | - |
 
 
 ## Comments
 
+### Routines
 All routines start with following comment:
 ```
 ; ==============================================================
@@ -29,11 +34,25 @@ RoutineLabel:    ; NOTE: Label could be a Parent Label (ParentLabel:) or a Child
     
 ```
 
+### Descriptive comments
 Parent and Child Labels are given a comment above them denote why they exist:
+
+This comment is tabbed left of the Label in order to make important sections stand out more, unless the Label is already Left aligned, in which case, so will the comment. This style of commenting is also used to denote the high-level function of the proceeding code
+
+In addition to the left tabbed high-level comments, lower-level comments are also included and share the same tabbing as the code they describe.
+
+Line specific comments are located to the right of the specific Instruction they describe. 
+
+Below is an example of how comments are used:
 ```
 ; Acts as an example for the CONVENTIONS.md file
     @ExampleChildLabelRoutine:
-        ld a, EXAMPLE_VALUE
+    ; Set up the example
+        ld a, EXAMPLE_VALUE            ; A = EXAMPLE_VALUE
+        ; Apply an example offset
+        ld hl, example.offsetValue     ; HL -> example.offsetValue
+        sub a, (hl)                    ; A = EXAMPLE_VALUE - example.offsetValue
+        ret
         ...
 ```
 
@@ -57,7 +76,8 @@ The *____EntityClass.asm* file always follows this pattern:
 ;  Example Entity Class Constants
 ; ================================================================================
 ; Entity States
-.DEF	EXAMPLE_VALUE					$01
+.DEF	EXAMPLE_VALUE					$00
+...
 
 ; ================================================================================
 ;  Example Entity Class Structure
@@ -66,9 +86,11 @@ The *____EntityClass.asm* file always follows this pattern:
 ;  Entity Skeleton
 ; ==============================================================
 .STRUCT exampleEntityStructure
-INSTANCEOF entitySkeleton
+    INSTANCEOF entitySkeleton
 ; ---------------------------------------------------------------------------------------------------
-; Unique Entity traits down here 
+ ; Unique Entity traits down here
+    ...
+
 .ENDST
 
 .SECTION "Example Entity Class"
@@ -77,8 +99,10 @@ INSTANCEOF entitySkeleton
 ; ================================================================================
 ; Example Entity Class description
 ExampleEntityClass:
+    ...
 
-...
+    @ExampleRoutine:
+        ...
 
 ExampleEntityClassEnd:
 .ENDS
