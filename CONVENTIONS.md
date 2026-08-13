@@ -15,6 +15,7 @@ Register values are used in the following way for commented code:
 | Labels/Addresses | StartingCapsCamelCase | RAM_JumpToCorrectGameState |
 | Constants | ALL_CAPS_WITH_UNDERSCORE | - |
 | Variables/RAM | lowerCaseStartingCamelCase | - |
+| Pointer | pointerNameLo, pointerNameHi | - |
 
 All routines start with following comment:
 `````
