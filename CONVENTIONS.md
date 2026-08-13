@@ -1,5 +1,5 @@
 # Tonbow Engine Conventions
-This is list of all conventions maintained throughout the Tonbow Engine in order to make code more understandable.
+This is list of all conventions maintained throughout the Tonbow Engine in order to make code more understandable. CONVENTIONS.md is not required reading. Most of the patterns of conventions should be easy to pick up. This document exists simply as a place to establish and check on conventions.
 
 Register values are used in the following way for commented code:
 ```
