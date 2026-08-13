@@ -15,7 +15,7 @@ Register values are used in the following way for commented code:
 | Labels/Addresses | StartingCapsCamelCase | RAM_JumpToCorrectGameState | This exception has code run in RAM |
 | Constants | ALL_CAPS_WITH_UNDERSCORE | - | - |
 | Variables/RAM | lowerCaseStartingCamelCase | - | - |
-| Pointer | pointerNameLo, pointerNameHi | - | Pointers should be broken into Low and High bytes for easy debugging |
+| Pointer | pointerNameLo, pointerNameHi | - | Pointers are broken into Low and High bytes for easy debugging |
 
 All routines start with following comment:
 `````
