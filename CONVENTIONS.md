@@ -12,20 +12,37 @@ Register values are used in the following way for commented code:
 
 | Item | Convention | Exceptions | Notes |
 | -------- | ------- | ------- | ------- |
-| Labels/Addresses | StartingCapsCamelCase | RAM_JumpToCorrectGameState | This exception has code run in RAM |
+| Labels/Addresses | StartingCapsCamelCase: | RAM_JumpToCorrectGameState | This exception has code run in RAM |
+| Parent Labels | ParentLabel: | - | Parent Labels are left aligned|
+| Child Labels | @ChildLabel: | - | Child Labels are tabbed to the right once per @|
+| PUSH/POP | - | - | Code following a PUSH is tabbed to the right once until the accompanying POP. A dummy POP that can't be reached will be added in cases where one is not needed to preserve syntax coloring and make the code easier to read |
 | Constants | ALL_CAPS_WITH_UNDERSCORE | - | - |
 | Variables/RAM | lowerCaseStartingCamelCase | - | - |
 | Pointer | pointerNameLo, pointerNameHi | - | Pointers are broken into Low and High bytes for easy debugging |
+| - | - | - | - |
 
 All routines start with following comment:
-`````
+```
 ; ==============================================================
 ;  Short description of routine
 ; ==============================================================       
 ; Parameters:         ; ie) HL -> exampleEntity.input, A = SOME_VALUE ---- "None" is also a valid parameter
 ; Returns:            ; ie) HL -> exampleEntity.output
 ; Affects:            ; ie) A, BC, DE, HL, temp8Bit
-    @RoutineLabel:    ; NOTE: Label could be a Parent Label (ParentLabel:) or a Child Label (@ChildLabel:) 
-`````
+RoutineLabel:    ; NOTE: Label could be a Parent Label (ParentLabel:) or a Child Label (@ChildLabel:)
+    ld a, (hl)
+    ...
+    
+```
+
+Parent and Child Labels are given a comment above them denote why they exist:
+```
+; Acts as an example for the CONVENTIONS.md file
+    @ExampleChildLabelRoutine:
+        ld a, EXAMPLE_VALUE
+        ...
+```
+
+			
  
  
