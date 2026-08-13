@@ -113,4 +113,6 @@ With any necessary ```.INCLUDE```'s added between ```ExampleEntityClass:``` and 
 ### Inheritance
 While inheritance isn't something natively supported in Z80, we can fake it by creating entities in the same form as others. All entities share the same attributes as the *BaseEntity*. This means that the routines in the *BaseEntity* folder can be used for any given entity so long as the parameters of the routine are satisfied. Any other Entity Types are built off of this foundation. 
 
+## Tips
 
+Any ```CALL``` that needs to be made within strict timings (such as HBlank palette swapping, scroll updating or SAT updating) can be done faster by dedicating a space in the Zeropage for an ```RST``` instead.
