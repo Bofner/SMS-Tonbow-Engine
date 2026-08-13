@@ -10,12 +10,12 @@ Register values are used in the following way for commented code:
 8BitRegister = SOME_VALUE            ; An 8-bit register is equal to an 8-bit value in RAM ie) A = variableValue.anotherValue 
 ```
 
-| Item    | Convention | Exceptions |
+| Item    | Convention | Exceptions | Notes |
 | -------- | ------- | ------- |
-| Labels/Addresses | StartingCapsCamelCase | RAM_JumpToCorrectGameState |
-| Constants | ALL_CAPS_WITH_UNDERSCORE | - |
-| Variables/RAM | lowerCaseStartingCamelCase | - |
-| Pointer | pointerNameLo, pointerNameHi | - |
+| Labels/Addresses | StartingCapsCamelCase | RAM_JumpToCorrectGameState | This exception has code run in RAM |
+| Constants | ALL_CAPS_WITH_UNDERSCORE | - | - |
+| Variables/RAM | lowerCaseStartingCamelCase | - | - |
+| Pointer | pointerNameLo, pointerNameHi | - | Pointers should be broken into Low and High bytes for easy debugging |
 
 All routines start with following comment:
 `````
