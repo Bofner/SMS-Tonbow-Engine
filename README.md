@@ -42,6 +42,8 @@ You will likely need to read through and understand each component of the Tonbow
 `````
 are meant to be useful when debugging by allowing the programmer to see what value, for instance, HL is *supposed* to be pointing at, while they can check in the debugger what value HL is *actually* pointing at. 
 
+I also recommend reading through **CONVENTIONS.md** to get an understanding of the conventions implemented throughout the code. If you find exceptions to the conventions, please let me know! 
+
 ### Structure
 
 The Tonbow Engine was designed to make reading through assembly code as painless as possible. Large concepts are broken into many folders and subfolders with files never taking up more space than they need to. There's nothing worse than forgetting where a certain subroutine lives, so folders are treated like individual components of the Engine, and depending on the size and scope, routines are often broken down across several files living within the same Class folder. 
