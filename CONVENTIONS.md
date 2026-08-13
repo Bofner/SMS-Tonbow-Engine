@@ -3,7 +3,7 @@ This is list of all conventions maintained throughout the Tonbow Engine in order
 
 | Item | Convention | Exceptions | Notes |
 | -------- | ------- | ------- | ------- |
-| Labels/Addresses | ```StartingCapsCamelCase:``` | RAM_JumpToCorrectGameState | This exception has code run in RAM |
+| Labels/Addresses | ```StartingCapsCamelCase:``` | ```RAM_JumpToCorrectGameState``` | This exception has code run in RAM |
 | Parent Labels | ```ParentLabel:``` | ```DJNZ -``` | Parent Labels are left aligned|
 | Child Labels |``` @ChildLabel:``` | - | Child Labels are tabbed to the right once per @|
 | Local Labels | ```--:```, ```-:```, ```+:```, ```++:``` | - | Avoided at almost all costs. Descriptive Child Labels will ALWAYS make debugging easier. Used for ```DJNZ``` because it only ever uses a single local label |
