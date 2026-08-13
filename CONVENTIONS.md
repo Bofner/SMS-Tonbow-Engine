@@ -3,16 +3,16 @@ This is list of all conventions maintained throughout the Tonbow Engine in order
 
 | Item | Convention | Exceptions | Notes |
 | -------- | ------- | ------- | ------- |
-| Labels/Addresses | StartingCapsCamelCase: | RAM_JumpToCorrectGameState | This exception has code run in RAM |
-| Parent Labels | ParentLabel: | ```DJNZ -``` | Parent Labels are left aligned|
-| Child Labels | @ChildLabel: | - | Child Labels are tabbed to the right once per @|
-| Local Labels | --:, -:, +:, ++: | - | Avoided at almost all costs. Descriptive Child Labels will ALWAYS make debugging easier. Used for ```DJNZ``` because it only ever uses a single local label |
+| Labels/Addresses | ```StartingCapsCamelCase:``` | RAM_JumpToCorrectGameState | This exception has code run in RAM |
+| Parent Labels | ```ParentLabel:``` | ```DJNZ -``` | Parent Labels are left aligned|
+| Child Labels |``` @ChildLabel:``` | - | Child Labels are tabbed to the right once per @|
+| Local Labels | ```--:```, ```-:```, ```+:```, ```++:``` | - | Avoided at almost all costs. Descriptive Child Labels will ALWAYS make debugging easier. Used for ```DJNZ``` because it only ever uses a single local label |
 | ```PUSH```/```POP``` | - | - | Code following a ```PUSH``` is tabbed to the right once until the accompanying ```POP```. A dummy ```POP``` that can't be reached will be added in cases where one is not needed to preserve syntax coloring and make the code easier to read |
 | ```.STRUCT```, ```.ENUM```, ```.RAMSECTION```  | - | - | Data following these directives is tabbed to the right once |
 | ```.SECTION```  | - | - | Code following .SECTION is left aligned, unless led with a Child Label |
-| Constants | ALL_CAPS_WITH_UNDERSCORE | - | - |
-| Variables/RAM | lowerCaseStartingCamelCase | - | - |
-| Pointer | pointerNameLo, pointerNameHi | - | Pointers are broken into Low and High bytes for easy debugging |
+| Constants | ```ALL_CAPS_WITH_UNDERSCORE``` | - | - |
+| Variables/RAM | ```lowerCaseStartingCamelCase``` | - | - |
+| Pointer | ```pointerNameLo```, ```pointerNameHi``` | - | Pointers are broken into Low and High bytes for easy debugging |
 | Instructions | ```neg ; NEG``` | - | Instructions are always lowercase in code but capitalized in comments |
 | Registers | ```ld a, $01 ; A = $01``` | - | Registers are always lowercase in code but capitalized in comments |
 | - | - | - | - |
