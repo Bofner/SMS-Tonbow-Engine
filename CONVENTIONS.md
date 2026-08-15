@@ -74,18 +74,8 @@ Classes are set up via folders in order to keep files from getting too long. The
 The *____EntityClass.asm* file always follows this pattern:
 ```
 ; ================================================================================
-;  Example Entity Class Constants
-; ================================================================================
-; Entity States
-.DEF	EXAMPLE_VALUE					$00
-...
-
-; ================================================================================
 ;  Example Entity Class Structure
 ; ================================================================================
-; ==============================================================
-;  Entity Skeleton
-; ==============================================================
 .STRUCT exampleEntityStructure
     INSTANCEOF entitySkeleton
 ; ---------------------------------------------------------------------------------------------------
@@ -100,7 +90,12 @@ The *____EntityClass.asm* file always follows this pattern:
 ; ================================================================================
 ; Example Entity Class description
 ExampleEntityClass:
-    ...
+; ================================================================================
+;  Example Entity Class Constants
+; ================================================================================
+; Entity States
+.DEFINE        	EXAMPLE_VALUE			$00
+...
 
     @ExampleRoutine:
         ...
