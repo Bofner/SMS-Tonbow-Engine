@@ -1,18 +1,13 @@
+.SECTION "Controller Input Handler Constants and Structure"
 ; ================================================================================
-;  Controller Input Handler
-; ================================================================================
-; Change the following throughout the entire class
-; ControllerInputHandler: 		Captial letter of the class (ClassExample)
-
-; ================================================================================
-;  Class Structs and Constants
+;  Controller Input Handler Class Structs and Constants
 ; ================================================================================
 ; Controller Input Handler Ports
-.DEF	JOYSTICK_PORT_A					$DC
-.DEF	JOYSTICK_PORT_B					$DD
-.DEF	JOYSTICK_PORT_CONTROL			$3F
-.DEF	GUN_SPOT_VERTICAL				$7E
-.DEF	GUN_SPOT_HORIZONTAL				$7F
+    .DEFINE 	JOYSTICK_PORT_A					$DC
+    .DEFINE 	JOYSTICK_PORT_B					$DD
+    .DEFINE 	JOYSTICK_PORT_CONTROL			$3F
+    .DEFINE 	GUN_SPOT_VERTICAL				$7E
+    .DEFINE 	GUN_SPOT_HORIZONTAL				$7F
 
 ; MD Config
 ; 7	Port B TH pin output level      (1=high, 0=low)
@@ -24,29 +19,29 @@
 ; 1	Port A TH pin direction         (1=input, 0=output)
 ; 0	Port A TR pin direction         (1=input, 0=output)
 
-.DEF    SET_TH_LO_PORT_A                %00001101
-.DEF    SET_TH_LO_PORT_B                %00000111
-.DEF    SET_TH_HI                       %00101101
+    .DEFINE     SET_TH_LO_PORT_A                %00001101
+    .DEFINE     SET_TH_LO_PORT_B                %00000111
+    .DEFINE     SET_TH_HI                       %00101101
 
-; Controller bit manipulation masks
-.DEF    FLIP_CONTROLLER_BITS            $FF
-.DEF    PLAYER_1_PORT_A                 %00111111
-.DEF    JOYSTICK_PORT_A_START           %00100000
-.DEF    PLAYER_2_PORT_A                 %11000000
-.DEF    PLAYER_2_PORT_B                 %00001111
-.DEF    JOYSTICK_PORT_B_START           %00001000
-.DEF    MD_PAD_START_TRIGGER            $2C
+    ; Controller bit manipulation masks
+    .DEFINE     FLIP_CONTROLLER_BITS            $FF
+    .DEFINE     PLAYER_1_PORT_A                 %00111111
+    .DEFINE     JOYSTICK_PORT_A_START           %00100000
+    .DEFINE     PLAYER_2_PORT_A                 %11000000
+    .DEFINE     PLAYER_2_PORT_B                 %00001111
+    .DEFINE     JOYSTICK_PORT_B_START           %00001000
+    .DEFINE     MD_PAD_START_TRIGGER            $2C
 
 ; ==============================================================
-;  Controller Input Handler Skeleton
+;  Controller Input Handler Structure
 ; ==============================================================
-.STRUCT controllerInputHandlerStructure
-; Inputs are saved as %-S21RLDU
-    playerOneInput                      db      ; Inputs from Player 1
-    playerTwoInput                      db      ; Inputs from Player 2
+    .STRUCT controllerInputHandlerStructure
+    ; Inputs are saved as %-S21RLDU
+        playerOneInput                      DB      ; Inputs from Player 1
+        playerTwoInput                      DB      ; Inputs from Player 2
+    .ENDST
 
-.ENDST
-
+.ENDS
 
 .RAMSECTION "Controller Input Handler Data" BANK 0 SLOT "RAM_SLOT" 
 ; Neccessary variables for keeping track of player inputs
@@ -54,12 +49,15 @@
 .ENDS
 
 
-.SECTION "Controller Input Handler"
+.SECTION "Controller Input Handler" APPENDTO "Controller Input Handler Constants and Structure"
+; ================================================================================
+;  Controller Input Handler
+; ================================================================================
+; Handles anything to do with getting input from the controller ports
 ControllerInputHandlerClass:
 ; ==============================================================
 ;  Checks for controller inputs
 ; ==============================================================
-; @PollForInputs:
 ; Parameters:   None
 ; Returns:      Updates controllerInputHandler.playerOneInput 
 ;               and controllerInputHandler.playerTwoInput

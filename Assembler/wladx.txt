@@ -1,3 +1,5 @@
-Use wla-z80 and wlalink if running Linux
+Use wla-z80 and wlalink if running Linux or macOS
 
 Use wla-z80.exe and wlalink.exe if running Windows
+
+WLA-DX can be found at https://github.com/vhelin/wla-dx

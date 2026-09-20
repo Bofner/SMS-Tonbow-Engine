@@ -1,0 +1,12 @@
+*.DS_Store
+Emulicious/Emulicious.jar
+Emulicious/cheats
+Emulicious/lib
+Emulicious/Emulicious.ini
+Assembler/osx
+Assembler/linux
+Assembler/windows
+*.sms
+*.sg
+*.sav
+*.sym

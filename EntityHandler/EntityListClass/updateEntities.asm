@@ -1,7 +1,6 @@
 ; ==============================================================
-;  Updates all Entities in the Entity List
+;  Updates all Entities in the Hi/Lo Entity List and 
 ; ==============================================================
-; 
 ; Parameters: None
 ; Returns: None
 ; Affects: A, BC, DE, HL
@@ -104,7 +103,7 @@
 				rlca
 				rlca										; A = $BitmapNumber
 				ld (entityList.findNewFirstRenderEntityBitmapKeyOffset), a	; Save BitmapNumber
-				; Make sure there are active entities in this bitmap
+			; Make sure there are active entities in this bitmap
 				@@@@CheckForActiveBitmap:
 					ld a, (entityList.findNewFirstRenderEntityBitmapKeyOffset) ; Redundancy for Loop
 					ld d, $00
@@ -116,8 +115,8 @@
 					ld a, (entityList.findNewFirstRenderEntityBitmapKeyOffset)
 					inc a
 					and BYTE_MASK_OFFSET						; A = $0,BitmapNum.NEXT 
-					; [The nibbles are reversed because this is an offset, so use the BITmask instead of BYTEmask]
-					; Check if the Bitmap is empty
+					; [The nibbles are reversed because this is an offset, so use the BITmask instead of BYTEmask] <- ?????
+				; Check if the Bitmap is empty
 					@@@@@CheckForEmptyBitmap:
 						ld (entityList.findNewFirstRenderEntityBitmapKeyOffset), a ; Save $BitmapNum,0
 						; Check if this bitmap is empty
@@ -161,10 +160,10 @@
 						ld (entityList.firstRenderEntityPointerHi), a
 					pop hl									; HL -> entityList.entity.CURRENT
 
-	; Load the First Render Entity for THIS frame
+	; Load the First Render Entity for THIS frame 
+	; (Same as CycleThroughBitmap, but done for the First Render Entity)
 		@@LoadFirstRenderEntity:
 			
-
 	; Update the bitmap and our location in it
 		@@CycleThroughBitmap:
 		; Begin our Entity Render Shuffle Loop
@@ -182,24 +181,10 @@
 		@@UpdateSingleEntity:
 			push bc
 			push hl
-			push de
-			; Call the Entitiy's Event Handler
-				; HL -> entity.CURRENT.updateRoutinePointerLo
-				ld a, (hl)
-				ld ixl, a
-				inc hl                      ; HL -> entity.CURRENT.updateRoutinePointerHi
-				ld a, (hl)
-				ld ixh, a					; IX -> EntityClass@EventHandler
-				inc hl                      ; HL -> entity.CURRENT.state
-				ld bc, @@ReturnFromEntityUpdate
-				push bc						; Make our JP (IX) function as a CALL (IX)
-				jp ix						; call EntityClass@EventHandler
-				pop bc						; Never reached
-			@@ReturnFromEntityUpdate:
+				call @@JumpToEntityUpdateRoutine
 				ld hl, entityList.entitiesUpdated
 				inc (hl)
-			pop de
-			pop hl
+			pop hl			; HL -> entity.CURRENT.updateRoutinePointerLo
 			pop bc
 	; Check if we are at the end of the Entity List		
 		@@UpdateSingleEntityEnd:	
@@ -254,7 +239,7 @@
 				djnz -
 			; HL -> entity.Bitmap.NEXT.0
 			jr @@SkipJumpToNextEntity
-
+	; Point to next entity and check if we have any remaining entities to update
 		@@CheckAllEntitiesUpdated:
 			ld de, ENTITY_SIZE	
 			add hl, de									; HL -> entity.NEXT
@@ -269,7 +254,7 @@
 			ret
 
 	; ----------------------------------------------------------------------------------
-
+	; Updates the high priority entities in order
 		@@UpdateHighPriorityEntities:
 		; Cycle through our 8 potential entities and update the if need be
 			ld b, HI_ENTITY_MAX								; B = Counter
@@ -288,28 +273,38 @@
 
 			ret 											
 
+		; Update a single entity from the bitmap
 			@@@UpdateEntity:
 				push bc
 				push hl
 				push de	
 				; Call the Entitiy's Event Handler
-					; HL -> entity.CURRENT.updateRoutinePointerLo
-					ld a, (hl)
-					ld ixl, a
-					inc hl                      ; HL -> entity.CURRENT.updateRoutinePointerHi
-					ld a, (hl)
-					ld ixh, a					; IX -> EntityClass@EventHandler
-					inc hl                      ; HL -> entity.CURRENT.state
-					ld bc, @@@@ReturnFromEntityUpdate
-					push bc						; Make our JP HL function as a CALL HL
-					jp ix						; call EntityClass@EventHandler
-					pop bc						; Never reached, just for PUSH/POP color consistency
-				@@@@ReturnFromEntityUpdate:
-					xor a
+					call @@JumpToEntityUpdateRoutine
+					xor a									; A = 0 (To check if we have any remaining entities)
 				pop de
 				pop hl
 				pop bc
 
 				ret
+
+		; ----------------------------------------------------------------------------------
+
+	; Sets the correct ROM bank and then jumps to the entity's Update Routine
+		@@JumpToEntityUpdateRoutine:
+		; Grab the Update Routine address from 
+			; HL -> entity.CURRENT.updateRoutinePointerLo
+			ld a, (hl)
+			ld ixl, a
+			inc hl                      ; HL -> entity.CURRENT.updateRoutinePointerHi
+			ld a, (hl)
+			ld ixh, a					; IX -> entity.CURRENT's EntityClass@EventHandler
+		; Set the proper bank for the entity	
+			inc hl						; HL -> entity.CURRENT.bank
+			ld de, currentBank			; DE -> currentBank
+			ld a, (de)					; A = (currentBank)
+			rst HandleBankSwitch
+			inc hl                      ; HL -> entity.CURRENT.state
+		; Call the Entitiy's Update Routine
+			jp ix						; Jump to entity.CURRENT's EntityClass@EventHandler
 
 @UpdateAllEntitiesEnd:

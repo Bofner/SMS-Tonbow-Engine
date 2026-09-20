@@ -23,22 +23,21 @@ TestRoomTonbowEntityClass:
 ;  Constants
 ; ==============================================================
 ; Init Values
-	.DEF 	TEST_ROOM_TONBOW_START_Y						$0600 		; 96 = $60.0 
-	.DEF	TEST_ROOM_TONBOW_START_X	 					$0280 		; 40 = $28.0 
-	.DEF	TEST_ROOM_TONBOW_SPEED							$10			; $LSB,FRAC
-	.DEF	TEST_ROOM_TONBOW_TIMER_INIT_VALUE				$00
-	.DEF	TEST_ROOM_TONBOW_CC								$04
+	.DEFINE	 	TEST_ROOM_TONBOW_START_Y						$0600 		; 96 = $60.0 
+	.DEFINE		TEST_ROOM_TONBOW_START_X	 					$0280 		; 40 = $28.0 
+	.DEFINE		TEST_ROOM_TONBOW_SPEED							$10			; $LSB,FRAC
+	.DEFINE		TEST_ROOM_TONBOW_TIMER_INIT_VALUE				$00
+	.DEFINE		TEST_ROOM_TONBOW_CC								$04
+	.DEFINE		TEST_ROOM_CLASS_BANK							$00
 
 ; VRAM Absolute Data
-	.DEF 	TEST_ROOM_TONBOW_VRAM							$0000
+	.DEFINE	 	TEST_ROOM_TONBOW_VRAM							$0000
 
 
 ; ==============================================================
 ;  Updates the TestRoomTonbow
 ; ==============================================================
-; 
-; 
-; Parameters: HL = testRoomTonbow.state (Should be coming from EntityList@UpdateEntities)
+; Parameters: HL = testRoomTonbow.currentState (Should be coming from EntityList@UpdateEntities)
 ; Returns: None
 ; Affects: DE
 	@Update:
@@ -55,7 +54,7 @@ TestRoomTonbowEntityClass:
 
 	; Update in SAT Buffer
 		ld de, testRoomTonbowStruct.yPos - testRoomTonbowStruct.cc
-		add hl, de							;		 HL -> testRoomTonbow.yPos
+		add hl, de									; HL -> testRoomTonbow.yPos
 	; yPos
 		ld a, (hl)
 		ld iyl, a									; IYL = yPos
@@ -108,7 +107,7 @@ TestRoomTonbowEntityClass:
 ; ==============================================================
 ; 
 ; Parameters: 	HL = testRoomTonbow.updateRoutinePointerLo 
-;				BC = yPos
+;				IY = yPos
 ; 				IX = xPos
 ; Affects: A, HL, DE
 	@Initialize:
@@ -116,6 +115,7 @@ TestRoomTonbowEntityClass:
 		; HL ->  testRoomTonbow.updateRoutinePointerLo
 		ld de, TestRoomTonbowEntityClass@Update
 		ld a, $FF									; A = Entity Type
+		ld b, TEST_ROOM_CLASS_BANK					; B = Class Bank
 		call BaseEntityClass@Initialize				; HL -> testRoomTonbow.cc
 		ld de, tonbowCC
 		ld a, (de)

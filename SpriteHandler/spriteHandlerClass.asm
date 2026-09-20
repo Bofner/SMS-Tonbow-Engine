@@ -14,14 +14,14 @@
 ; ================================================================================
 ; byte used for easy indexing of SAT Buffer addresses
     .STRUCT bufferByteStructure
-        bufferByte          db
+        bufferByte                                      DB
     .ENDST
 ; All necessary components for the Sprite Handler
     .STRUCT spriteHandlerStructure
-        spriteCount     				                db                      ; How many sprites are on screen on current frame (Reset at the beginning of each frame)
-        vBuffer.0                     	                db                      ; Holds the yPos for all sprites
+        spriteCount     				                DB                      ; How many sprites are on screen on current frame (Reset at the beginning of each frame)
+        vBuffer.0                     	                DB                      ; Holds the yPos for all sprites
         vBuffer     INSTANCEOF bufferByteStructure      (SPRITE_MAX - 1)
-        hcBuffer.0                                      db                      ; Holds the xPos and CC for all sprites
+        hcBuffer.0                                      DB                      ; Holds the xPos and CC for all sprites
         hcBuffer    INSTANCEOF bufferByteStructure      ((2* SPRITE_MAX) - 1) 
     .ENDST
 .ENDS
@@ -38,29 +38,26 @@
 ; ==============================================================
 ; Sprite Handler
 SpriteHandlerClass:
-
 ; ==============================================================
 ;  Initialize the Sprite Handler
 ; ==============================================================
-.INCLUDE "../SpriteHandler/initSpriteHandler.asm"
+.INCLUDE "SpriteHandler/initSpriteHandler.asm"
 
 ; ==============================================================
 ;  Add a sprite to the SAT Buffer
 ; ==============================================================
-.INCLUDE "../SpriteHandler/updateSATBuffer.asm"
+.INCLUDE "SpriteHandler/updateSATBuffer.asm"
 
 ; ==============================================================
 ;  Clear the SAT Buffer
 ; ==============================================================
-.INCLUDE "../SpriteHandler/clearSATBuffer.asm"
+.INCLUDE "SpriteHandler/clearSATBuffer.asm"
 
 ; ==============================================================
 ;  Update the SAT in VRAM
 ; ==============================================================
-.INCLUDE "../SpriteHandler/updateSAT.asm"
-
+.INCLUDE "SpriteHandler/updateSAT.asm"
 
 SpriteHandlerClassEnd:
-
 
 .ENDS

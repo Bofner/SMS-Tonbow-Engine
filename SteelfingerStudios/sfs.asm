@@ -23,7 +23,7 @@ InitSFS:
     @ClearData:
     ; Reset VRAM and SAT
         call ClearVRAM
-        call ClearSATBuff
+        call ClearSATBuffer
     ; Reset scroll values
         xor a
         out (PORT_VDP_ADDRESS), a
@@ -77,21 +77,21 @@ InitSFS:
         rst SetVDPAddress
         ld hl, SteelFingerTilesSMS
         ld bc, SteelFingerTilesSMSEnd-SteelFingerTilesSMS
-        rst CopyToVDP
+        rst CopyToVRAM
     /*     
     ; Load SteelFginer Studios Sprites
         ld hl, $2000 | VRAM_WRITE
         call SetVDPAddress
         ld hl, SteelFingerShimmer
         ld bc, SteelFingerShimmerEnd-SteelFingerShimmer
-        call CopyToVDP  */
+        call CopyToVRAM  */
         
     ; Load Map
         ld hl, $3800 | VRAM_WRITE
         rst SetVDPAddress
         ld hl, SteelFingerStudiosMapSMS
         ld bc, SteelFingerStudiosMapSMSEnd-SteelFingerStudiosMapSMS
-        rst CopyToVDP
+        rst CopyToVRAM
 
 
 ; ==============================================================
@@ -157,19 +157,19 @@ MainLoopSFS:
 ;  BG Maps
 ; ----------------
 SteelFingerStudiosMapSMS:
-    .INCLUDE "../Assets/SteelfingerStudios/Backgrounds/SteelfingerStudiosSMSMap.inc"
+    .INCLUDE "Assets/SteelfingerStudios/Backgrounds/SteelfingerStudiosSMSMap.inc"
 SteelFingerStudiosMapSMSEnd:
 ; ----------------
 ;  BG Palettes
 ; ----------------
 SteelFingerBGPaletteSMS:
-    .INCLUDE "../Assets/SteelfingerStudios/Backgrounds/SteelfingerStudiosSMSPal.inc"
+    .INCLUDE "Assets/SteelfingerStudios/Backgrounds/SteelfingerStudiosSMSPal.inc"
 SteelFingerBGPaletteSMSEnd:
 ; ----------------
 ;  BG Tiles
 ; ----------------
 SteelFingerTilesSMS:
-    .INCLUDE "../Assets/SteelfingerStudios/Backgrounds/SteelfingerStudiosSMSTiles.inc"
+    .INCLUDE "Assets/SteelfingerStudios/Backgrounds/SteelfingerStudiosSMSTiles.inc"
 SteelFingerTilesSMSEnd:
 
 
@@ -183,11 +183,11 @@ SteelFingerTilesSMSEnd:
 ; ----------------
 
 SteelFingerSPRPalette:
-    ; .include "../assets/test/Steelfinger Studios SMS-1000SPRPal.inc"
+    ; .include "assets/test/Steelfinger Studios SMS-1000SPRPal.inc"
 SteelFingerSPRPaletteEnd:
 
 SteelFingerShimmer:
-    ; .include "../assets/test/sfsShimmer_tiles.inc"
+    ; .include "assets/test/sfsShimmer_tiles.inc"
 SteelFingerShimmerEnd:
 
 .ENDS

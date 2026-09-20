@@ -1,7 +1,6 @@
 ; ==============================================================
-;  Initilize Entity List
+;  Initilizes Entity List
 ; ==============================================================
-; 
 ; Parameters: None
 ; Returns: None
 ; Affects: A, BC, DE, HL

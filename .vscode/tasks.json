@@ -6,10 +6,13 @@
 		{
             "label": "Launch Emulicious",
             "windows":{
-				"command": "start \"\" javaw -jar ../../Emulicious-with-Java/Emulicious.jar output.sms"
+				"command": "javaw -jar Emulicious/Emulicious.jar output.sms"
 			},
 			"linux":{
-				"command": "nohup java -jar ../../Emulicious-with-Java/Emulicious.jar output.sms"
+				"command": "nohup java -jar Emulicious/Emulicious.jar output.sms"
+			},
+			"osx":{
+				"command": "nohup java -jar Emulicious/Emulicious.jar output.sms"
 			},
             "type": "shell",
             "group": {
@@ -22,13 +25,16 @@
 			"label": "SMS Batch File Run",
 			"type": "shell",
 			"windows":{
-				"command": "..\\..\\..\\assembler\\buildSMS.bat"
+				"command": "Assembler\\windowsBuildSMS.bat"
 			},
 			"linux":{
-				"command": "bash ../../../assembler/buildSMS.sh"
+				"command": "bash Assembler/linuxBuildSMS.sh"
+			},
+			"osx":{
+				"command": "bash Assembler/osxBuildSMS.sh"
 			},
 			"options": {
-				"cwd": "${workspaceFolder}/Main"
+				"cwd": "${workspaceFolder}"
 			},
 			"problemMatcher": [],
 			"group": {

@@ -1,25 +1,20 @@
 ; ==============================================================
 ;  Removes Entity from the Entity List if it wasn't initialized
 ; ==============================================================
-; 
-; Parameters: Called from UpdateAllEntities, so DE = entity.state
+; Parameters: Called from UpdateAllEntities, so HL -> entity.currentState
 ; Returns: None
-; Affects: TBD
+; Affects: A, BC, DE, HL
 	@DeactivateUninitializedEntity:
-	; Grab State
-		ex de, hl									; HL -> entity.state
-													; DE -> @DeactivateUninitializedEntity
 ; ==============================================================
 ;  Removes entity from the Entity List
 ; ==============================================================
-; 
-; Parameters: HL -> entity.state
+; Parameters: HL -> entity.currentState
 ; Returns: None
 ; Affects: A, BC, DE, HL
 	@DeactivateEntity:
 	; Deactivate Entity
 		ld a, INACTIVE_ENTITY
-		cp (hl)								; Check if already Iniactive
+		cp (hl)								; Check if already Inactive
 		ret z								; If yes, then return
 		ld (hl), a
 	; Check if our entity is HI or LO Priority
@@ -79,7 +74,7 @@
 			rlca
 			rlca
 			ld de, entityList.bitmap.0
-			add hl, de							; ld hl, bitmap.currentLocation
+			add hl, de							; HL -> bitmap.currentLocation
 			ld b, a
 			ld c, ACTIVE_ENTITY_RES_MASK
 		; Make the RESET MASK for the bit we want deactivated
@@ -106,10 +101,9 @@
 ; ==============================================================
 ;  Removes entity from the Entity List
 ; ==============================================================
-; 
-; Parameters: HL -> entity.state
+; Parameters: (Coming from @DeactiveEntity)
 ; Returns: None
-; Affects: TBD
+; Affects: A, BC, DE, HL
 	@@DeactivateHighPriorityEntity:
 	; Deactivate Entity
 		ld a, INACTIVE_ENTITY
@@ -154,7 +148,7 @@
 		rlca
 		rlca
 		ld de, entityListHi.highPriorityEntityBitmap
-		add hl, de							; ld hl, bitmap.currentLocation
+		add hl, de							; HL -> bitmap.currentLocation
 		ld b, a
 		ld c, ACTIVE_ENTITY_RES_MASK
 	; Make the RESET MASK for the bit we want deactivated
@@ -173,6 +167,5 @@
 		ld a, (hl)
 		and c
 		ld (hl), a
-		; end
 		ret
 	@@DeactivateHighPriorityEntityEnd:

@@ -2,8 +2,9 @@
 ;  Adds an Entity to the Entity List
 ; ==============================================================
 ; @ActivateEntity:
-; Parameters:  IXl = Player Number (0 -> NOT Player), A = HI_ENTITY or LO_ENTITY
-; Returns: HL -> eventID
+; Parameters:  	IXl = Player Number (0 means NOT Player)
+;				A = HI_ENTITY or LO_ENTITY
+; Returns: HL -> entityList.entity.CURRENT.updateEntityRoutinePointerLo
 ; Affects: A, BC, DE, HL, temp8Bit
 @ActivateEntity:
 ; Check if High Priority Entity
@@ -111,6 +112,8 @@
 	; Point to Update Routine Pointer
 		ld de, entityStructure.updateRoutinePointerLo - entityStructure.state
 		add hl, de								; HL -> entity.NEXTFREE.updateRoutinePointerLo
+	; Checks if the new entity is the player entity and updates the global
+	; Player Entity address to match the entry in the Entity List
 	@@CheckIfEntityIsPlayer:
 	; Check if we need to set Player Pointer
 		ld a, ixl								; A = Player(?) Number
@@ -120,7 +123,7 @@
 		jr nc, @@ReturnFromActivation			; /
 	; If we get here, then set pointer
 		push hl
-			ld hl, player1Entity.pointer - 2		; Set up our offset
+			ld hl, player1Entity.pointer - 2	; Set up our offset
 			sla a								; Double a (because pointers are WORDS)
 			ld d, $00
 			ld e, a
@@ -140,10 +143,10 @@
 	@@ReturnFromActivation:			
 	; Set entity to deactivate itself upon update unless properly initialized
 		; HL -> entity.updateRoutinePointerLo
-		ld a, lobyte(@DeactivateUninitializedEntity)
+		ld a, LOBYTE(@DeactivateUninitializedEntity)
 		ld (hl), a		
 		inc hl									; HL -> entity.NEXTFREE.updateRoutinePointerHi
-		ld a, hibyte(@DeactivateUninitializedEntity)
+		ld a, HIBYTE(@DeactivateUninitializedEntity)
 		ld (hl), a
 		dec hl									; HL -> entity.NEXTFREE.updateRoutinePointerLo
 	; Return with HL -> entity.NEXTFREE.updateRoutinePointerLo
@@ -155,8 +158,8 @@
 ;  Adds an Entity to the High PriorityEntity List
 ; ==============================================================
 ; @ActivateHighPriorityEntity
-; Parameters:  (Coming from ActivateEntity) ixl = Player Number (0 -> NOT Player)
-; Returns: HL -> eventID
+; Parameters:  (Coming from ActivateEntity) 
+; Returns: HL -> entityListHi.entity.CURRENT.updateEntityRoutinePointerLo
 ; Affects: A, BC, DE, HL, temp8Bit
 	@ActivateHighPriorityEntity:
 	; Check if we can add the entity to the list
@@ -171,10 +174,10 @@
 		ld c, $00									; Counter for Position in list
 		@@FindFreeSpace:
 		; A = highPriorityEntityBitmap
-			srl a										; Bit shift to check if current spot is free
-			jr nc, @@AddEntity							; If free, then add it to the list
-			add hl, de									; HL -> entityListHi.entity.NEXT
-			inc c										; Increase counter for list position
+			srl a									; Bit shift to check if current spot is free
+			jr nc, @@AddEntity						; If free, then add it to the list
+			add hl, de								; HL -> entityListHi.entity.NEXT
+			inc c									; Increase counter for list position
 			jr @@FindFreeSpace
 
 		@@AddEntity:

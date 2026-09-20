@@ -24,28 +24,28 @@ PlayerTemplateEntity:
 ;  Constants
 ; ==============================================================
 ; Init Values
-	.DEF 	PLAYER_TEMPLATE_ENTITY_START_Y						$0600 		; 96 = $60.0 
-	.DEF	PLAYER_TEMPLATE_ENTITY_START_X	 					$0280 		; 40 = $28.0 
-	.DEF	PLAYER_TEMPLATE_ENTITY_SPEED							$10			; $LSB,FRAC
-	.DEF	PLAYER_TEMPLATE_ENTITY_TIMER_INIT_VALUE				$00
-	.DEF	PLAYER_TEMPLATE_ENTITY_CC							$04
+	.DEFINE	 	PLAYER_TEMPLATE_ENTITY_START_Y				$0600 		; 96 = $60.0 
+	.DEFINE		PLAYER_TEMPLATE_ENTITY_START_X	 			$0280 		; 40 = $28.0 
+	.DEFINE		PLAYER_TEMPLATE_ENTITY_SPEED				$10			; $LSB,FRAC
+	.DEFINE		PLAYER_TEMPLATE_ENTITY_TIMER_INIT_VALUE		$00
+	.DEFINE		PLAYER_TEMPLATE_ENTITY_CC					$04
 
 ; Toggle
-    .DEF    FLICKER_TOGGLE                              LO_ENTITY   ; ($FF)
-	.DEF	TOGGLE_TIMER								$1E
+    .DEFINE	    FLICKER_TOGGLE                              LO_ENTITY   ; ($FF)
+	.DEFINE		TOGGLE_TIMER								$1E
 
 ; MASKS
-	.DEF	DPAD_MASK									%00001111
+	.DEFINE		DPAD_MASK									%00001111
 
 ; VRAM Absolute Data
-	.DEF 	PLAYER_TEMPLATE_ENTITY_VRAM							$0000
+	.DEFINE	 	PLAYER_TEMPLATE_ENTITY_VRAM					$0000
 
 ; Player values
-	.DEF	PLAYER_TEMPLATE_UD_VELOCITY							$08
-	.DEF	PLAYER_TEMPLATE_LR_VELOCITY							$08
-	.DEF	PLAYER_TEMPLATE_DIAG_UNNORMALIZED_VELOCITY			SQRT(((PLAYER_TEMPLATE_UD_VELOCITY ^2) + (PLAYER_TEMPLATE_LR_VELOCITY ^2)))
-	.DEF	PLAYER_TEMPLATE_DIAG_UD_COMPONENT_VELOCITY			ROUND((PLAYER_TEMPLATE_UD_VELOCITY ^2) / PLAYER_TEMPLATE_DIAG_UNNORMALIZED_VELOCITY)
-	.DEF	PLAYER_TEMPLATE_DIAG_LR_COMPONENT_VELOCITY			ROUND((PLAYER_TEMPLATE_LR_VELOCITY ^2) / PLAYER_TEMPLATE_DIAG_UNNORMALIZED_VELOCITY)
+	.DEFINE		PLAYER_TEMPLATE_UD_VELOCITY					$08
+	.DEFINE		PLAYER_TEMPLATE_LR_VELOCITY					$08
+	.DEFINE		PLAYER_TEMPLATE_DIAG_UNNORMALIZED_VELOCITY	SQRT(((PLAYER_TEMPLATE_UD_VELOCITY ^2) + (PLAYER_TEMPLATE_LR_VELOCITY ^2)))
+	.DEFINE		PLAYER_TEMPLATE_DIAG_UD_COMPONENT_VELOCITY	ROUND((PLAYER_TEMPLATE_UD_VELOCITY ^2) / PLAYER_TEMPLATE_DIAG_UNNORMALIZED_VELOCITY)
+	.DEFINE		PLAYER_TEMPLATE_DIAG_LR_COMPONENT_VELOCITY	ROUND((PLAYER_TEMPLATE_LR_VELOCITY ^2) / PLAYER_TEMPLATE_DIAG_UNNORMALIZED_VELOCITY)
 
 
 ; ==============================================================
@@ -108,16 +108,15 @@ PlayerTemplateEntity:
 	; 3 * N + DPadJumpTable
 		ld c, a
 		add a, c
-		add a, c                           ; 3 * N 
-		ex de, hl						; DE -> entity.state
-		ld h, 0
-		ld l, a
+		add a, c                        ; 3 * N 
+		ld ixh, 0
+		ld ixl, a
 		ld bc, @@DPadJumpTable
-		add hl, bc                      ; 3 * N + DPadJumpTable
-		jp hl                           ; Jump to specific input subroutine
+		add ix, bc                      ; 3 * N + DPadJumpTable
+		jp ix                           ; Jump to specific input subroutine
 
 		@@ReturnFromDPadCheck:
-			ex de, hl					; HL -> entity.state
+			; HL -> entity.state
 		; Adjust our timer
 			ld de, entityList.entity.8.timer
 			ld a, (de)
@@ -215,7 +214,7 @@ PlayerTemplateEntity:
 
 		; DE -> entity.state
 		@@DPadUp:
-			ex de, hl					; HL -> entity.state
+			; HL -> entity.state
 			ld de, playerTemplateEntityStruct.yVel - playerTemplateEntityStruct.state
 			add hl, de					; HL -> entity.yVel
 			; Decrease yVel to move up
@@ -223,11 +222,11 @@ PlayerTemplateEntity:
 			ld (hl), a
 			ld de, playerTemplateEntityStruct.state - playerTemplateEntityStruct.yVel
 			add hl, de					; HL -> entity.state
-			ex de, hl					; DE -> entity.state
+			; DE -> entity.state
 			jp @@ReturnFromDPadCheck
 
 		@@DPadDown:
-			ex de, hl					; HL -> entity.state
+			; HL -> entity.state
 			ld de, playerTemplateEntityStruct.yVel - playerTemplateEntityStruct.state
 			add hl, de					; HL -> entity.yVel
 			; Decrease yVel to move up
@@ -235,12 +234,12 @@ PlayerTemplateEntity:
 			ld (hl), a
 			ld de, playerTemplateEntityStruct.state - playerTemplateEntityStruct.yVel
 			add hl, de					; HL -> entity.state
-			ex de, hl					; DE -> entity.state
+			; DE -> entity.state
 
 			jp @@ReturnFromDPadCheck
 
 		@@DPadLeft:
-			ex de, hl					; HL -> entity.state
+			; HL -> entity.state
 			ld de, playerTemplateEntityStruct.xVel - playerTemplateEntityStruct.state
 			add hl, de					; HL -> entity.yVel
 			; Decrease yVel to move up
@@ -248,12 +247,12 @@ PlayerTemplateEntity:
 			ld (hl), a
 			ld de, playerTemplateEntityStruct.state - playerTemplateEntityStruct.xVel
 			add hl, de					; HL -> entity.state
-			ex de, hl					; DE -> entity.state
+			; DE -> entity.state
 
 			jp @@ReturnFromDPadCheck
 
 		@@DPadRight:
-			ex de, hl					; HL -> entity.state
+			; HL -> entity.state
 			ld de, playerTemplateEntityStruct.xVel - playerTemplateEntityStruct.state
 			add hl, de					; HL -> entity.yVel
 			; Decrease yVel to move up
@@ -261,12 +260,12 @@ PlayerTemplateEntity:
 			ld (hl), a
 			ld de, playerTemplateEntityStruct.state - playerTemplateEntityStruct.xVel
 			add hl, de					; HL -> entity.state
-			ex de, hl					; DE -> entity.state
+			; DE -> entity.state
 
 			jp @@ReturnFromDPadCheck
 
 		@@DPadUpLeft:
-			ex de, hl					; HL -> entity.state
+			; HL -> entity.state
 			ld de, playerTemplateEntityStruct.yVel - playerTemplateEntityStruct.state
 			add hl, de					; HL -> entity.yVel
 			; Decrease yVel to move up
@@ -279,12 +278,12 @@ PlayerTemplateEntity:
 			ld (hl), a
 			ld de, playerTemplateEntityStruct.state - playerTemplateEntityStruct.xVel
 			add hl, de					; HL -> entity.state
-			ex de, hl					; DE -> entity.state
+			; DE -> entity.state
 
 			jp @@ReturnFromDPadCheck
 
 		@@DPadDownLeft:
-			ex de, hl					; HL -> entity.state
+			; HL -> entity.state
 			ld de, playerTemplateEntityStruct.yVel - playerTemplateEntityStruct.state
 			add hl, de					; HL -> entity.yVel
 			; Increase yVel to move down
@@ -297,12 +296,12 @@ PlayerTemplateEntity:
 			ld (hl), a
 			ld de, playerTemplateEntityStruct.state - playerTemplateEntityStruct.xVel
 			add hl, de					; HL -> entity.state
-			ex de, hl					; DE -> entity.state
+			; DE -> entity.state
 
 			jp @@ReturnFromDPadCheck
 
 		@@DPadUpRight:
-			ex de, hl					; HL -> entity.state
+			; HL -> entity.state
 			ld de, playerTemplateEntityStruct.yVel - playerTemplateEntityStruct.state
 			add hl, de					; HL -> entity.yVel
 			; Decrease yVel to move up
@@ -315,12 +314,12 @@ PlayerTemplateEntity:
 			ld (hl), a
 			ld de, playerTemplateEntityStruct.state - playerTemplateEntityStruct.xVel
 			add hl, de					; HL -> entity.state
-			ex de, hl					; DE -> entity.state
+			; DE -> entity.state
 
 			jp @@ReturnFromDPadCheck
 
 		@@DPadDownRight:
-			ex de, hl					; HL -> entity.state
+			; HL -> entity.state
 			ld de, playerTemplateEntityStruct.yVel - playerTemplateEntityStruct.state
 			add hl, de					; HL -> entity.yVel
 			; Increase yVel to move down
@@ -333,7 +332,7 @@ PlayerTemplateEntity:
 			ld (hl), a
 			ld de, playerTemplateEntityStruct.state - playerTemplateEntityStruct.xVel
 			add hl, de					; HL -> entity.state
-			ex de, hl					; DE -> entity.state
+			; DE -> entity.state
 			jp @@ReturnFromDPadCheck
 
 ; ==============================================================
@@ -387,7 +386,7 @@ PlayerTemplateEntity:
 ; ==============================================================
 ;  Updates Player Golem sprite and writes to SATBuffer
 ; ==============================================================
-    ;.INCLUDE "../Player/buildPlayerGolemMetasprite.asm"
+    ;.INCLUDE "Player/buildPlayerGolemMetasprite.asm"
 
 
 ; ================================================================================
@@ -406,13 +405,13 @@ PlayerTemplateEntity:
         ; Raw Data to be loaded into VRAM
             @@@RawData:
                 @@@@RawDataFrame0:
-                    ;.INCLUDE "../Assets/TestRoom/Sprites/Golem/papaGolemRightWalk0SpriteTiles.inc"
+                    ;.INCLUDE "Assets/TestRoom/Sprites/Golem/papaGolemRightWalk0SpriteTiles.inc"
 				@@@@RawDataFrame0End:
                 @@@@RawDataFrame1:
-                    ;.INCLUDE "../Assets/TestRoom/Sprites/Golem/papaGolemRightWalk1SpriteTiles.inc"
+                    ;.INCLUDE "Assets/TestRoom/Sprites/Golem/papaGolemRightWalk1SpriteTiles.inc"
 				@@@@RawDataFrame1End:
 				@@@@RawDataFrame2:
-                    ;.INCLUDE "../Assets/TestRoom/Sprites/Golem/papaGolemRightWalk2SpriteTiles.inc"
+                    ;.INCLUDE "Assets/TestRoom/Sprites/Golem/papaGolemRightWalk2SpriteTiles.inc"
 				@@@@RawDataFrame2End:
             @@@RawDataEnd:
 	; ===============================================
@@ -425,13 +424,13 @@ PlayerTemplateEntity:
         ; Raw Data to be loaded into VRAM
             @@@RawData:
                 @@@@RawDataFrame0:
-                    ;.INCLUDE "../Assets/TestRoom/Sprites/Golem/papaGolemLeftWalk0SpriteTiles.inc"
+                    ;.INCLUDE "Assets/TestRoom/Sprites/Golem/papaGolemLeftWalk0SpriteTiles.inc"
 				@@@@RawDataFrame0End:
                 @@@@RawDataFrame1:
-                    ;.INCLUDE "../Assets/TestRoom/Sprites/Golem/papaGolemLeftWalk1SpriteTiles.inc"
+                    ;.INCLUDE "Assets/TestRoom/Sprites/Golem/papaGolemLeftWalk1SpriteTiles.inc"
 				@@@@RawDataFrame1End:
 				@@@@RawDataFrame2:
-                    ;.INCLUDE "../Assets/TestRoom/Sprites/Golem/papaGolemLeftWalk2SpriteTiles.inc"
+                    ;.INCLUDE "Assets/TestRoom/Sprites/Golem/papaGolemLeftWalk2SpriteTiles.inc"
 				@@@@RawDataFrame2End:
             @@@RawDataEnd:
 

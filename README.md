@@ -2,7 +2,7 @@
 
 The official Steelfinger Studios engine for creating Master System games in Z80 assembly.
 
-A full walk-through of the engine is available for [Patreon](https://www.patreon.com/cw/Bofner) supporters starting from the free tier!
+A full walk-through of the engine will be uploaded available for [Patreon](https://www.patreon.com/cw/Bofner) supporters starting from the free tier!
 
 The purpose of the SMS Tonbow Engine is for getting a Sega Master System assembly game up and running faster than starting from scratch. It is best thought of as an example template. It has many starter files that should be used to keep structure consistent throughout a project. It also has several commented out sections for alternate settings and handling, such as the ROM size and memory layout. 
 
@@ -52,9 +52,12 @@ The Tonbow Engine was designed to make reading through assembly code as painless
 
 ### Helpful tools
 
-- SMS/GG Graphics Exporter: https://steelfinger-studios.itch.io/master-system-game-gear-graphics-exporter-for-aseprite
 - Emulicious: https://emulicious.net/
+- WLA DX: https://github.com/vhelin/wla-dx
+- SMS/GG Graphics Exporter: https://steelfinger-studios.itch.io/master-system-game-gear-graphics-exporter-for-aseprite
+
 - Furnace Tracker: https://tildearrow.org/furnace/
+
 
 ## TODO
 
@@ -69,3 +72,7 @@ This is still a work-in-progress, so there's still a lot to get done, but it wil
 - Test Room (Example controllable screen)
 - PSG music support
 - PSG sound effects support
+
+-  Check Windows Assembly 
+- Check Linux Assembly
+

@@ -1,1 +1,3 @@
-Use emulicious.jar
+Place Emulicious.jar in this folder. 
+
+Emulicious can be found at https://emulicious.net/

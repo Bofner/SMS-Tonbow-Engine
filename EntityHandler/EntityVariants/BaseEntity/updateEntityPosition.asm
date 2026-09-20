@@ -1,9 +1,9 @@
 ; ==============================================================
-;  Update Position 
+;  Updates Entity Position 
 ; ==============================================================
-; Parameters: HL = entity.yVel
+; Parameters: HL -> entity.yVel
 ; Returns: None
-; Affects: TBD
+; Affects: A, BC, HL
 ; Convert the xFracPos and yFracPos into xPos and yPos
 	@UpdateEntityPosition:
 	; Use velocity to update the yPosition
