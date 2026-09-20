@@ -10,3 +10,4 @@ Assembler/windows
 *.sg
 *.sav
 *.sym
+nohup.out
