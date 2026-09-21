@@ -93,11 +93,11 @@ The *____EntityClass.asm* file always follows this pattern:
 
 .ENDS
 
-    .RAMSECTION "Example Data"
-    ; In this example, this class is only created once for the project so it
-    ; gets its own space in RAM. For an "Entity" this is handled by the Entity List
-        implementedExampleStructure             INSTANCEOF  exampleStructure
-    .ENDS
+.RAMSECTION "Example Data"
+; In this example, this class is only created once for the project so it
+; gets its own space in RAM. For an "Entity" this is handled by the Entity List
+    implementedExampleStructure             INSTANCEOF  exampleStructure
+.ENDS
 
 .SECTION "Example Entity Class" APPENDTO "Example Entity Class Constants and Structures"
 ; ================================================================================
