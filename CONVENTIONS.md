@@ -8,7 +8,7 @@ This is list of all conventions maintained throughout the Tonbow Engine in order
 | Child Labels |``` @ChildLabel:``` | - | Child Labels are tabbed to the right once per @|
 | Local Labels | ```--:```, ```-:```, ```+:```, ```++:``` | ```DJNZ -``` | Avoided at almost all costs. Descriptive Child Labels will **always** make debugging easier. Used for ```DJNZ``` because it only ever uses a single local label |
 | ```PUSH```/```POP``` | - | - | Code following a ```PUSH``` is tabbed to the right once until the accompanying ```POP```. A dummy ```POP``` that can't be reached will be added in cases where one is not needed to preserve syntax coloring and make the code easier to read |
-| ```.STRUCT```, ```.ENUM```, ```.RAMSECTION```  | - | - | Data following these directives is tabbed to the right once |
+| ```.STRUCT```, ```.ENUM```, ```.RAMSECTION```  | - | - | Data following these directives is tabbed to the right once. ```.STRUCT``` and ```.ENUM``` will be tabbed to the right once, but ```.RAMSECTION``` is always left aligned |
 | ```.SECTION```  | - | - | Code following .SECTION is left aligned, unless led with a Child Label |
 | Constants | ```ALL_CAPS_WITH_UNDERSCORE``` | - | - |
 | Variables/RAM | ```lowerCaseStartingCamelCase``` | - | - |
@@ -59,11 +59,11 @@ Below is an example of how comments are used:
 
 Register values are used in the following way for commented code:
 ```
-16BitRegister -> someVariable        ; A 16-bit register points to a value in RAM or ROM ie) HL -> variableValue.anotherValue
+16BitRegister -> someVariable        ; A 16-bit register points to a value in RAM or ROM ie) HL -> variableValue.anotherValue, HL -> SomeAddressWithData
 
-16BitRegister = SOME_VALUE           ; A 16-bit register is equal to a 16-bit value in RAM or ROM ie) HL = SOME_VALUE 
+16BitRegister = SOME_VALUE           ; A 16-bit register is equal to a 16-bit value in RAM or ROM ie) HL = SOME_VALUE, HL = SomeAddressWithCode
 
-8BitRegister = SOME_VALUE            ; An 8-bit register is equal to an 8-bit value in RAM ie) A = variableValue.anotherValue 
+8BitRegister = SOME_VALUE            ; An 8-bit register is equal to an 8-bit value in RAM ie) A = SOME_VALUE, A = (variable.anotherValue) 
 ```
 
 ## Classes			
@@ -73,23 +73,39 @@ Classes are set up via folders in order to keep files from getting too long. The
 
 The *____EntityClass.asm* file always follows this pattern:
 ```
+.SECTION "Example Entity Class Constants and Structures"
 ; ================================================================================
-;  Example Entity Class Structure
+;  Example Class Constants
 ; ================================================================================
-.STRUCT exampleEntityStructure
-    INSTANCEOF entitySkeleton
-; ---------------------------------------------------------------------------------------------------
- ; Unique Entity traits down here
+; Test Values
+    .DEFINE     	EXAMPLE_TEST_VALUE					$00
     ...
 
-.ENDST
+; ================================================================================
+;  Example Class Structure
+; ================================================================================
+    .STRUCT exampleStructure
+        exampleState            DB
+        exampleVariableWord     DW         
+        ...
 
-.SECTION "Example Entity Class"
+    .ENDST
+
+.ENDS
+
+    .RAMSECTION "Example Data"
+    ; In this example, this class is only created once for the project so it
+    ; gets its own space in RAM. For an "Entity" this is handled by the Entity List
+        implementedExampleStructure             INSTANCEOF  exampleStructure
+    .ENDS
+
+.SECTION "Example Entity Class" APPENDTO "Example Entity Class Constants and Structures"
 ; ================================================================================
 ;  Example Entity Class
 ; ================================================================================
 ; Example Entity Class description
 ExampleEntityClass:
+<<<<<<< HEAD
 ; ================================================================================
 ;  Example Entity Class Constants
 ; ================================================================================
@@ -97,6 +113,13 @@ ExampleEntityClass:
 .DEFINE        	EXAMPLE_VALUE			$00
 ...
 
+=======
+; ==============================================================
+;  Checks for controller inputs
+; ==============================================================
+; Parameters:   None
+; Returns:      Creates an example for the user to see 
+>>>>>>> 613aa9a (conventions)
     @ExampleRoutine:
         ...
 
